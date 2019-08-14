@@ -124,7 +124,7 @@ def plot_interaction(descr):
 
 
 
-run_all()
+# run_all()
 plot_all()
 
 
