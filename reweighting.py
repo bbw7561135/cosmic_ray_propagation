@@ -98,5 +98,7 @@ if __name__ == '__main__':
     plot_diff(-2)
     plot_diff(-1, -2)
 
+    plt.show()
+
 
 #  vim: set ff=unix tw=79 sw=4 ts=8 et ic ai :

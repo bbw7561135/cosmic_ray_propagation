@@ -17,7 +17,7 @@ SPECTRAL_INDICES = {
     'fermi' : -2,
 }
 
-EMIN, EMAX = 1e18, 1e21
+EMIN, EMAX = 1e18 * eV, 1e21 * eV
 
 CANDIDATES = OrderedDict([
     ('H', {'A' : 1, 'Z' : 1}),
@@ -36,7 +36,7 @@ INTERACTIONS = OrderedDict([
 
 DISTANCES = OrderedDict([
     ('close', (0, 10*Mpc)),
-    ('far', (100*Mpc, 10000*Mpc)),
+    ('far', (100*Mpc, 5000*Mpc)),
 ])
 
 
@@ -45,9 +45,6 @@ def run_all():
     # iterate the candidate types
     for c_name, c_specs in CANDIDATES.items():
 
-        # build candidate object
-        c = nucleusId(c_specs['A'], c_specs['Z'])
-
         # iterate the distance regimes
         for dist_name, dist_spec in DISTANCES.items():
 
@@ -55,23 +52,24 @@ def run_all():
             descr = '%s-%s-%%s' % (c_name, dist_name)
 
             # perform one run without interaction
-            run(c, None, dist_spec, descr % 'free',
+            run(c_specs, None, dist_spec, descr % 'free',
                 with_nuclear_decay=False if c_name == 'H' else True)
 
             # iterate interactions
             for i_name, i in INTERACTIONS.items():
-                run(c, i, dist_spec, descr % i_name,
+                run(c_specs, i, dist_spec, descr % i_name,
                     with_nuclear_decay=False if c_name == 'H' else True)
 
 
 
-def run(candidate, interaction, distances, description, with_nuclear_decay=True):
+def run(c_specs, interaction, distances, description, with_nuclear_decay=True):
     print(description, '\n')
 
     m = ModuleList()
     m.add(SimplePropagation(1*kpc, 10*Mpc))
     m.add(MinimumEnergy(EMIN))
     if interaction is not None:
+        print('adding interaction %s' % interaction)
         m.add(interaction)
         if with_nuclear_decay:
             m.add(NuclearDecay())
@@ -83,8 +81,9 @@ def run(candidate, interaction, distances, description, with_nuclear_decay=True)
     m.add(obs)
 
     source = Source()
+    candidate = nucleusId(c_specs['A'], c_specs['Z'])
     source.add(SourceParticleType(candidate))
-    source.add(SourcePowerLawSpectrum(EMIN, EMAX, SPECTRAL_INDICES['flat']))
+    source.add(SourcePowerLawSpectrum(EMIN, c_specs['Z']*EMAX, SPECTRAL_INDICES['flat']))
     source.add(SourceUniform1D(*distances))
     source.add(SourceRedshift1D())
 
@@ -109,6 +108,8 @@ def plot_all():
                 plot_interaction(descr % i_name)
 
             plt.legend()
+
+    plt.show()
 
 
 

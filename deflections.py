@@ -15,7 +15,7 @@ LABEL = r'$B_{rms}=%.0e$, $r=%.0e$'
 
 
 A, Z = 1, 1
-EMIN, EMAX = 1e18, 1e21
+EMIN, EMAX = 1e18*eV, 1e21*eV
 LMIN, LMAX = 150*kpc, 2000*kpc
 SPECTRAL_INDEX_BFIELD = -11/3
 SPECTRAL_INDEX_FERMI = -2
@@ -64,10 +64,10 @@ def plot_spectrum(B_rms, radius):
     data = np.genfromtxt(OUTFILENAME % (B_rms, radius), names=True)
     E, E0 = data['E'], data['E0']
     weights = E0**(-SPECTRAL_INDEX_FLAT + SPECTRAL_INDEX_FERMI)
-    N_noweights, _ = np.histogram(np.log10(E))
-    N, bins = np.histogram(np.log10(E), weights=weights)
+    N_noweights, _ = np.histogram(np.log10(E), bins=10)
+    N, bins = np.histogram(np.log10(E), weights=weights, bins=10)
     dE = 10**bins[1:] - 10**bins[:-1]
-    dR_L = dE / (Z * sc.e * B_rms)
+    dR_L = dE / (sc.c * sc.e * B_rms)
     drho = dR_L / L_c
     yerr = N / drho / np.sqrt(N_noweights)
     plt.errorbar(drho, N / drho, yerr, label=LABEL % (B_rms, radius))
@@ -76,23 +76,37 @@ def plot_spectrum(B_rms, radius):
 
 def plot_spectra():
     plt.figure()
-    ax_idx = 231
-    for r in RADII:
+    ax_idx = 221
+    for b in B_RMS:
         plt.subplot(ax_idx)
         plt.loglog(nonposx='clip', nonposy='clip')
         ax_idx += 1
-        for b in B_RMS:
+        for r in RADII:
             plot_spectrum(b, r)
         plt.legend()
 
 
+def compute_deflection(B_rms, radius):
+    data = np.genfromtxt(OUTFILENAME % (B_rms, radius), names=True)
+    p, p0 = np.array([data['Px'], data['Py'], data['Pz']]), \
+            np.array([data['P0x'], data['P0y'], data['P0z']])
 
-# if False:
+    # TODO: mean, std, plotting
+
+
+def compute_traj_len(B_rms, radius):
+    data = np.genfromtxt(OUTFILENAME % (B_rms, radius), names=True)
+    traj_len = data['D']
+    # TODO: mean, std, plotting
+
+
+
 if __name__ == '__main__':
     # print('turbulent correlation length: %e kpc\n' % L_c)
     # for b in B_RMS:
     #     run(b)
     plot_spectra()
+    plt.show()
 
 
 
