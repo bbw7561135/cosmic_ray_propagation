@@ -86,26 +86,44 @@ def plot_spectra():
         plt.legend()
 
 
-def compute_deflection(B_rms, radius):
+
+def compute_deflection_and_traj(B_rms, radius):
+    def dot(x, y):
+        return np.sum(x * y, axis=0)
+    def norm(x):
+        return np.linalg.norm(x, ord=2, axis=0)
+
     data = np.genfromtxt(OUTFILENAME % (B_rms, radius), names=True)
     p, p0 = np.array([data['Px'], data['Py'], data['Pz']]), \
             np.array([data['P0x'], data['P0y'], data['P0z']])
-
-    # TODO: mean, std, plotting
-
-
-def compute_traj_len(B_rms, radius):
-    data = np.genfromtxt(OUTFILENAME % (B_rms, radius), names=True)
+    angle = np.arccos(dot(p, p0) / (norm(p) * norm(p0)))
     traj_len = data['D']
-    # TODO: mean, std, plotting
 
+    return np.array([
+        angle.mean(), angle.std(), traj_len.mean(), traj_len.std()
+    ])
+
+
+
+def plot_deflection_and_traj():
+    for b in B_RMS:
+        print('B_rms = %.0e nG' % b)
+        for i, r in enumerate(RADII):
+            res = compute_deflection_and_traj(b, r)
+            print('\tR = %.0e:\tdefl = (%.2f +- %.2f) Degree\ttraj = (%.2f +- %.2f) Mpc' \
+                    % (r, np.rad2deg(res[0]), np.rad2deg(res[1]), res[2], res[3]))
+        print()
+
+
+# TODO: find and mark area of resonance, interpolate
 
 
 if __name__ == '__main__':
     # print('turbulent correlation length: %e kpc\n' % L_c)
     # for b in B_RMS:
     #     run(b)
-    plot_spectra()
+    # plot_spectra()
+    plot_deflection_and_traj()
     plt.show()
 
 
