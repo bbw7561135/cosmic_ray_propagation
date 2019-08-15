@@ -115,10 +115,10 @@ def plot_all():
 def plot_interaction(descr):
     data = np.genfromtxt(OUTFILENAME % descr, names=True)
     E, E0 = data['E'], data['E0']
-    weights = (E0**(-SPECTRAL_INDICES['flat'] + SPECTRAL_INDICES['fermi']))
+    weights = E0**(-SPECTRAL_INDICES['flat'] + SPECTRAL_INDICES['fermi'])
     N_noweights, _ = np.histogram(np.log10(E))
     N, bins = np.histogram(np.log10(E), weights=weights)
-    dE = (10**(bins[1:]) - 10**(bins[:-1]) )
+    dE = 10**bins[1:] - 10**bins[:-1]
     yerr = N / dE / np.sqrt(N_noweights)
     plt.errorbar(dE, N / dE, yerr, label=descr)
 

@@ -69,14 +69,14 @@ def plot_diff(spectral_index, new_spectral_index=None):
 
     title = r'$\alpha=%+.1f$' % spectral_index
     if new_spectral_index is not None:
-        weights = (E0**(-spectral_index + new_spectral_index))
+        weights = E0**(-spectral_index + new_spectral_index)
         title += r' - reweighted with $\alpha_{new}=%+.1f$' % new_spectral_index
     else:
         weights = None
 
     N_noweights, _ = np.histogram(np.log10(E))
     N, bins = np.histogram(np.log10(E), weights=weights)
-    dE = (10**(bins[1:]) - 10**(bins[:-1]) )
+    dE = 10**bins[1:] - 10**bins[:-1]
     yerr = N / dE / np.sqrt(N_noweights)
 
     plt.figure()
