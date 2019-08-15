@@ -8,7 +8,7 @@ from crpropa import *
 
 
 SEED = 100
-NSIM = 1000
+NSIM = 10000
 
 OUTFILENAME = 'output/deflections_brms-%.0e_r-%.0e.txt'
 LABEL = r'$B_{rms}=%.0e$, $r=%.0e$'
@@ -26,7 +26,7 @@ B_RMS = np.array([50, 10, 1]) * nG
 
 L_c = turbulentCorrelationLength(LMIN, LMAX, SPECTRAL_INDEX_BFIELD)
 RADII = L_c * np.array([.05, .5, 1., 5., 50.])
-DMAX = RADII[-1] * 1e3
+DMAX = RADII[-1] * 1e2
 
 
 
@@ -120,9 +120,9 @@ def plot_deflection_and_traj():
 
 if __name__ == '__main__':
     # print('turbulent correlation length: %e kpc\n' % L_c)
-    # for b in B_RMS:
-    #     run(b)
-    # plot_spectra()
+    for b in B_RMS:
+        run(b)
+    plot_spectra()
     plot_deflection_and_traj()
     plt.show()
 
