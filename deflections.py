@@ -64,8 +64,8 @@ def plot_spectrum(B_rms, radius):
     data = np.genfromtxt(OUTFILENAME % (B_rms, radius), names=True)
     E, E0 = data['E'], data['E0']
     weights = E0**(-SPECTRAL_INDEX_FLAT + SPECTRAL_INDEX_FERMI)
-    N_noweights, _ = np.histogram(np.log10(E), bins=10)
-    N, bins = np.histogram(np.log10(E), weights=weights, bins=10)
+    N_noweights, _ = np.histogram(np.log10(E), bins=20)
+    N, bins = np.histogram(np.log10(E), weights=weights, bins=20)
     dE = 10**bins[1:] - 10**bins[:-1]
     dR_L = dE / (sc.c * sc.e * B_rms)
     drho = dR_L / L_c
