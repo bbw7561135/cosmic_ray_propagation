@@ -15,17 +15,17 @@ LABEL = r'$B_{rms}=%.0e$, $r=%.0e$'
 
 
 A, Z = 1, 1
-EMIN, EMAX = 1e18*eV, 1e21*eV
+EMIN, EMAX = 1e17*eV, 1e20*eV
 LMIN, LMAX = 150*kpc, 2000*kpc
 SPECTRAL_INDEX_BFIELD = -11/3
 SPECTRAL_INDEX_FERMI = -2
 SPECTRAL_INDEX_FLAT = -1
 CENTER = (128, 128, 128)
-B_RMS = np.array([50, 10, 1]) * nG
+B_RMS = np.array([50, 20, 10, 1]) * nG
 
 
 L_c = turbulentCorrelationLength(LMIN, LMAX, SPECTRAL_INDEX_BFIELD)
-RADII = L_c * np.array([.05, .5, 1., 5., 50.])
+RADII = L_c * np.array([.05, .5, 1., 5., 50., 100.])
 DMAX = RADII[-1] * 1e2
 
 
@@ -66,11 +66,11 @@ def plot_spectrum(B_rms, radius):
     weights = E0**(-SPECTRAL_INDEX_FLAT + SPECTRAL_INDEX_FERMI)
     N_noweights, _ = np.histogram(np.log10(E), bins=20)
     N, bins = np.histogram(np.log10(E), weights=weights, bins=20)
-    dE = 10**bins[1:] - 10**bins[:-1]
+    dE = (10**bins[1:] + 10**bins[:-1]) / 2.
     dR_L = dE / (sc.c * sc.e * B_rms)
     drho = dR_L / L_c
-    yerr = N / drho / np.sqrt(N_noweights)
-    plt.errorbar(drho, N / drho, yerr, label=LABEL % (B_rms, radius))
+    yerr = dE**2 * N / drho / np.sqrt(N_noweights)
+    plt.errorbar(dE / eV, dE**2 * N / drho, yerr, label=LABEL % (B_rms, radius))
 
 
 
@@ -115,13 +115,11 @@ def plot_deflection_and_traj():
         print()
 
 
-# TODO: find and mark area of resonance, interpolate
-
 
 if __name__ == '__main__':
     # print('turbulent correlation length: %e kpc\n' % L_c)
-    for b in B_RMS:
-        run(b)
+    # for b in B_RMS:
+    #     run(b)
     plot_spectra()
     plot_deflection_and_traj()
     plt.show()

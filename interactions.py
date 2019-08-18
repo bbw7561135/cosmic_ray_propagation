@@ -7,7 +7,7 @@ from collections import OrderedDict
 from crpropa import *
 
 
-NSIM = 1000
+NSIM = 10000
 
 OUTFILENAME = 'output/interactions-%s.txt'
 
@@ -17,7 +17,7 @@ SPECTRAL_INDICES = {
     'fermi' : -2,
 }
 
-EMIN, EMAX = 1e18 * eV, 1e21 * eV
+EMIN, EMAX = 1e17 * eV, 1e21 * eV
 
 CANDIDATES = OrderedDict([
     ('H', {'A' : 1, 'Z' : 1}),
@@ -36,7 +36,7 @@ INTERACTIONS = OrderedDict([
 
 DISTANCES = OrderedDict([
     ('close', (0, 10*Mpc)),
-    ('far', (100*Mpc, 5000*Mpc)),
+    ('far', (100*Mpc, 1000*Mpc)),
 ])
 
 
@@ -119,9 +119,9 @@ def plot_interaction(descr):
     weights = E0**(-SPECTRAL_INDICES['flat'] + SPECTRAL_INDICES['fermi'])
     N_noweights, _ = np.histogram(np.log10(E))
     N, bins = np.histogram(np.log10(E), weights=weights)
-    dE = 10**bins[1:] - 10**bins[:-1]
-    yerr = N / dE / np.sqrt(N_noweights)
-    plt.errorbar(dE, N / dE, yerr, label=descr)
+    dE = (10**bins[1:] + 10**bins[:-1]) / 2.
+    yerr = N * dE / np.sqrt(N_noweights)
+    plt.errorbar(dE / eV, N * dE, yerr, label=descr)
 
 
 

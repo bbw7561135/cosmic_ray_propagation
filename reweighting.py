@@ -76,7 +76,7 @@ def plot_diff(spectral_index, new_spectral_index=None):
 
     N_noweights, _ = np.histogram(np.log10(E))
     N, bins = np.histogram(np.log10(E), weights=weights)
-    dE = 10**bins[1:] - 10**bins[:-1]
+    dE = (10**bins[1:] + 10**bins[:-1]) / 2.
     yerr = N / dE / np.sqrt(N_noweights)
 
     plt.figure()

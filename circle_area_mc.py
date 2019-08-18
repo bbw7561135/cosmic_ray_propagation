@@ -16,7 +16,7 @@ M = 1_000
 a = np.random.uniform(size=(2, N))
 area_one = 4 * np.count_nonzero(a[0]**2 + a[1]**2 < 1) / N
 print(f'Area of an unit circle from 1 MC run with {N:_d} samples: '
-      f'{ area_one :.4f}')
+      f'{area_one:.4f}')
 
 
 # averaging multiple MC runs
@@ -24,7 +24,7 @@ b = np.random.uniform(size=(2, N, M))
 area_many = 4 * np.count_nonzero(b[0]**2 + b[1]**2 < 1, axis=0) / N
 mean, std = area_many.mean(), area_many.std()
 print(f'Mean and std of {M:_d} MC runs with {N:_d} samples each: '
-      f'{ mean :.4f} +/- { std :.4f}')
+      f'{mean:.4f} +/- {std:.4f}')
 
 
 # normal limit

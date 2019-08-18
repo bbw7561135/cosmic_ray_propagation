@@ -11,21 +11,22 @@ SEED = 100
 NSIM = 10000
 
 OUTFILENAME = 'output/constraints_brms-%.0e_r-%.0e.txt'
+LABEL = r'$B_{rms}=%.0e$, $r=%.0e$'
 
 OBSERVER_RADIUS = 25 * kpc
 OBSERVER_AREA = 4. * np.pi * OBSERVER_RADIUS**2
 
 A, Z = 1, 1
-EMIN, EMAX = 1e18*eV, 1e21*eV
+EMIN, EMAX = 1e17*eV, 1e20*eV
 LMIN, LMAX = 150*kpc, 2000*kpc
 SPECTRAL_INDEX_BFIELD = -11/3
 SPECTRAL_INDEX_FERMI = -2
 SPECTRAL_INDEX_FLAT = -1
 CENTER = (128, 128, 128)
-B_RMS = np.array([50, 10, 1]) * nG
+B_RMS = np.array([50, 20, 10, 1]) * nG
 
 L_c = turbulentCorrelationLength(LMIN, LMAX, SPECTRAL_INDEX_BFIELD)
-RADII = L_c * np.array([.05, .5, 1., 5., 50.])
+RADII = L_c * np.array([.05, .5, 1., 5., 50., 100.])
 DMAX = RADII[-1] * 1e2
 
 INTERACTIONS = [
@@ -88,7 +89,7 @@ def plot_spectrum(B_rms, radius):
     N_noweights, _ = np.histogram(np.log10(E), bins=20)
     N, bins = np.histogram(np.log10(E), weights=weights, bins=20)
 
-    dE = 10**bins[1:] - 10**bins[:-1]
+    dE = (10**bins[1:] + 10**bins[:-1]) / 2.
     dF = N * radius**2 / OBSERVER_AREA**2
     yerr = dF / np.sqrt(N_noweights)
     plt.errorbar(dE / eV, dF, yerr, label=LABEL % (B_rms, radius))
@@ -107,7 +108,7 @@ def plot_spectra():
 
 
 # for b in B_RMS:
-#     run(b)
+    # run(b)
 plot_spectra()
 
 
