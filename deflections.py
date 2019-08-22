@@ -123,14 +123,33 @@ def plot_deflection_and_traj():
         print()
 
 
+def plot_trajectories():
+    import glob
+    from mpl_toolkits.mplot3d import Axes3D
+    data_files = glob.glob('output/deflections*one-particle_full-traj*.txt')
+    plt.figure()
+    ax = plt.subplot(111, projection='3d', aspect='equal')
+    for df in data_files:
+        data = np.genfromtxt(df, names=True)
+        x, y, z = data['X'], data['Y'], data['Z']
+        ax.plot(x, y, z)
+    x0, y0, z0 = CENTER / Mpc
+    u = np.linspace(0, 2*np.pi, 100)
+    v = np.linspace(0, np.pi, 100)
+    X = 24 * np.outer(np.cos(u), np.sin(v))
+    Y = 24 * np.outer(np.sin(u), np.sin(v))
+    Z = 24 * np.outer(np.ones_like(u), np.cos(v))
+    ax.plot_wireframe(X+x0, Y+y0, Z+z0, rstride=10, cstride=10, color='tab:red')
+
 
 if __name__ == '__main__':
     pass
     # print('turbulent correlation length: %e kpc\n' % L_c)
     # for b in B_RMS:
     #     run(b)
-    plot_spectra()
-    plot_deflection_and_traj()
+    # plot_spectra()
+    # plot_deflection_and_traj()
+    plot_trajectories()
     plt.show()
 
 
