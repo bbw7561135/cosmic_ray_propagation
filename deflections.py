@@ -12,6 +12,8 @@ NSIM = 10000
 # NSIM = 1
 
 OUTFILENAME = 'output/deflections_brms-%.0e_r-%.0e.txt'
+SAVEFILENAME = 'plotdata/deflections_brms-%.0e_r-%.0e.csv'
+DEFLANGLEFILE = 'plotdata/deflection-angles_brms-%.0e.csv'
 # OUTFILENAME = 'output/deflections_brms-%.0e_r-%.0e_one-particle_full-traj_ObserverSurface_%s.txt'
 LABEL = r'$B_{rms}=%.0e$, $r=%.0e$'
 
@@ -68,7 +70,7 @@ def run(B_rms):
 
 
 
-def plot_spectrum(B_rms, radius):
+def plot_spectrum(B_rms, radius, save=False):
     data = np.genfromtxt(OUTFILENAME % (B_rms, radius), names=True)
     E, E0 = data['E'], data['E0']
     weights = E0**(-SPECTRAL_INDEX_FLAT + SPECTRAL_INDEX_FERMI)
@@ -80,9 +82,14 @@ def plot_spectrum(B_rms, radius):
     yerr = dE**2 * N / drho / np.sqrt(N_noweights)
     plt.errorbar(dE / eV, dE**2 * N / drho, yerr, label=LABEL % (B_rms, radius))
 
+    if save:
+        np.savetxt(SAVEFILENAME % (B_rms, radius),
+                   np.vstack((dE/eV, dE**2*N/drho, yerr)).T,
+                   header='dE N yerr', comments='')
 
 
-def plot_spectra():
+
+def plot_spectra(save=False):
     plt.figure()
     ax_idx = 221
     for b in B_RMS:
@@ -90,7 +97,7 @@ def plot_spectra():
         plt.loglog(nonposx='clip', nonposy='clip')
         ax_idx += 1
         for r in RADII:
-            plot_spectrum(b, r)
+            plot_spectrum(b, r, save)
         plt.legend()
 
 
@@ -113,14 +120,23 @@ def compute_deflection_and_traj(B_rms, radius):
 
 
 
-def plot_deflection_and_traj():
+def plot_deflection_and_traj(save=False):
     for b in B_RMS:
-        print('B_rms = %.0e nG' % b)
-        for i, r in enumerate(RADII):
-            res = compute_deflection_and_traj(b, r)
-            print('\tR = %.0e:\tdefl = (%.2f +- %.2f) Degree\ttraj = (%.2f +- %.2f) Mpc' \
-                    % (r, res[0], res[1], res[2], res[3]))
-        print()
+        if save:
+            fp = open(DEFLANGLEFILE % b, 'w+')
+            fp.write('R defl ddefl traj dtraj\n' \
+                     + '\n'.join(['%.0e %.2f %.2f %.2f %.2f'
+                                  % (r, *compute_deflection_and_traj(b, r))
+                                  for r in RADII])
+                     + '\n')
+            fp.close()
+        else:
+            print('B_rms = %.0e nG' % b)
+            for r in RADII:
+                res = compute_deflection_and_traj(b, r)
+                print('\tR = %.0e:\tdefl = (%.2f +- %.2f) Degree\ttraj = (%.2f +- %.2f) Mpc' \
+                        % (r, res[0], res[1], res[2], res[3]))
+            print()
 
 
 def plot_trajectories():
@@ -143,14 +159,14 @@ def plot_trajectories():
 
 
 if __name__ == '__main__':
-    pass
+    SAVE = False
     # print('turbulent correlation length: %e kpc\n' % L_c)
     # for b in B_RMS:
     #     run(b)
-    # plot_spectra()
-    # plot_deflection_and_traj()
-    plot_trajectories()
-    plt.show()
+    # plot_spectra(SAVE)
+    plot_deflection_and_traj(SAVE)
+    # plot_trajectories()
+    # plt.show()
 
 
 

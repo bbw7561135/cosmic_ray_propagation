@@ -10,6 +10,7 @@ from crpropa import *
 NSIM = 10000
 
 OUTFILENAME = 'output/interactions-%s.txt'
+SAVEFILENAME = 'plotdata/interactions-%s.csv'
 
 
 SPECTRAL_INDICES = {
@@ -92,7 +93,7 @@ def run(c_specs, interaction, distances, description, with_nuclear_decay=True):
 
 
 
-def plot_all():
+def plot_all(save=False):
     plt.figure()
     ax_idx = 221
 
@@ -103,30 +104,36 @@ def plot_all():
             ax_idx += 1
             descr = '%s-%s-%%s' % (c_name, dist_name)
 
-            plot_interaction(descr % 'free')
+            plot_interaction(descr % 'free', save)
             for i_name in INTERACTIONS.keys():
-                plot_interaction(descr % i_name)
+                plot_interaction(descr % i_name, save)
 
             plt.legend()
 
-    plt.show()
+    if not save:
+        plt.show()
 
 
 
-def plot_interaction(descr):
+def plot_interaction(descr, save):
     data = np.genfromtxt(OUTFILENAME % descr, names=True)
     E, E0 = data['E'], data['E0']
     weights = E0**(-SPECTRAL_INDICES['flat'] + SPECTRAL_INDICES['fermi'])
     N_noweights, _ = np.histogram(np.log10(E))
-    N, bins = np.histogram(np.log10(E), weights=weights)
+    N, bins = np.histogram(np.log10(E), weights=weights, density=True)
     dE = (10**bins[1:] + 10**bins[:-1]) / 2.
     yerr = N * dE / np.sqrt(N_noweights)
     plt.errorbar(dE / eV, N * dE, yerr, label=descr)
 
+    if save:
+        np.savetxt(SAVEFILENAME % descr,
+                   np.vstack((dE/eV, N*dE, yerr)).T,
+                   header='dE N yerr', comments='')
+
 
 
 # run_all()
-plot_all()
+plot_all(False)
 
 
 
