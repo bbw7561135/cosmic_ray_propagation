@@ -9,8 +9,10 @@ from crpropa import *
 
 SEED = 100
 NSIM = 10000
+# NSIM = 1
 
 OUTFILENAME = 'output/deflections_brms-%.0e_r-%.0e.txt'
+# OUTFILENAME = 'output/deflections_brms-%.0e_r-%.0e_one-particle_full-traj_ObserverSurface_%s.txt'
 LABEL = r'$B_{rms}=%.0e$, $r=%.0e$'
 
 
@@ -20,12 +22,14 @@ LMIN, LMAX = 150*kpc, 2000*kpc
 SPECTRAL_INDEX_BFIELD = -11/3
 SPECTRAL_INDEX_FERMI = -2
 SPECTRAL_INDEX_FLAT = -1
-CENTER = (128, 128, 128)
+CENTER = np.array([128, 128, 128]) * 75*kpc
 B_RMS = np.array([50, 20, 10, 1]) * nG
+# B_RMS = np.array([10]) * nG
 
 
 L_c = turbulentCorrelationLength(LMIN, LMAX, SPECTRAL_INDEX_BFIELD)
 RADII = L_c * np.array([.05, .5, 1., 5., 50., 100.])
+# RADII = L_c * np.array([5., 50.])
 DMAX = RADII[-1] * 1e2
 
 
@@ -40,12 +44,16 @@ def run(B_rms):
 
     for radius in RADII:
         obs = Observer()
-        obs.add(ObserverLargeSphere(Vector3d(*CENTER), radius))
+        obs.add(ObserverSurface(Sphere(Vector3d(*CENTER), radius)))
         obs.setDeactivateOnDetection(False)
         output = TextOutput(OUTFILENAME % (B_rms, radius), Output.Event3D)
+        # output = TextOutput(OUTFILENAME % (B_rms, radius, 'obs'), Output.Event3D)
         output.enable(Output.SourceDirectionColumn)
         obs.onDetection(output)
         m.add(obs)
+
+    # output = TextOutput(OUTFILENAME % (B_rms, radius, 'full'), Output.Event3D)
+    # m.add(output)
 
     m.add(MaximumTrajectoryLength(DMAX))
 
@@ -96,7 +104,7 @@ def compute_deflection_and_traj(B_rms, radius):
     data = np.genfromtxt(OUTFILENAME % (B_rms, radius), names=True)
     p, p0 = np.array([data['Px'], data['Py'], data['Pz']]), \
             np.array([data['P0x'], data['P0y'], data['P0z']])
-    angle = np.arccos(dot(p, p0) / (norm(p) * norm(p0)))
+    angle = np.rad2deg(np.arccos(dot(p, p0) / (norm(p) * norm(p0))))
     traj_len = data['D']
 
     return np.array([
@@ -111,17 +119,37 @@ def plot_deflection_and_traj():
         for i, r in enumerate(RADII):
             res = compute_deflection_and_traj(b, r)
             print('\tR = %.0e:\tdefl = (%.2f +- %.2f) Degree\ttraj = (%.2f +- %.2f) Mpc' \
-                    % (r, np.rad2deg(res[0]), np.rad2deg(res[1]), res[2], res[3]))
+                    % (r, res[0], res[1], res[2], res[3]))
         print()
 
 
+def plot_trajectories():
+    import glob
+    from mpl_toolkits.mplot3d import Axes3D
+    data_files = glob.glob('output/deflections*one-particle_full-traj*.txt')
+    plt.figure()
+    ax = plt.subplot(111, projection='3d', aspect='equal')
+    for df in data_files:
+        data = np.genfromtxt(df, names=True)
+        x, y, z = data['X'], data['Y'], data['Z']
+        ax.plot(x, y, z)
+    x0, y0, z0 = CENTER / Mpc
+    u = np.linspace(0, 2*np.pi, 100)
+    v = np.linspace(0, np.pi, 100)
+    X = 24 * np.outer(np.cos(u), np.sin(v))
+    Y = 24 * np.outer(np.sin(u), np.sin(v))
+    Z = 24 * np.outer(np.ones_like(u), np.cos(v))
+    ax.plot_wireframe(X+x0, Y+y0, Z+z0, rstride=10, cstride=10, color='tab:red')
+
 
 if __name__ == '__main__':
+    pass
     # print('turbulent correlation length: %e kpc\n' % L_c)
     # for b in B_RMS:
     #     run(b)
-    plot_spectra()
-    plot_deflection_and_traj()
+    # plot_spectra()
+    # plot_deflection_and_traj()
+    plot_trajectories()
     plt.show()
 
 
