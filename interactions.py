@@ -13,7 +13,7 @@ OUTFILENAME = 'output/interactions-%s.txt'
 
 
 SPECTRAL_INDICES = {
-    'flat' : -1,        
+    'flat' : -1,
     'fermi' : -2,
 }
 
