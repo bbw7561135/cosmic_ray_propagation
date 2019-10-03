@@ -1,0 +1,174 @@
+\documentclass[11pt,a4paper]{scrartcl}
+\usepackage[top=2cm,bottom=3cm,left=2cm,right=2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+    \setdefaultlanguage{english}
+\usepackage{lmodern}
+\usepackage{fixcmex}
+\usepackage{enumitem}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+% \usepackage{bbold}
+\usepackage{dsfont}
+\usepackage{stmaryrd}
+\usepackage{physics}
+\usepackage{siunitx}
+    \sisetup{%
+        range-units=single,
+        range-phrase={\text{~to~}},
+        list-final-separator={\text{~and~}},
+        separate-uncertainty=true,
+        math-micro=\text{\textmu},
+        text-micro=\textmu,
+        math-ohm=\Omega,
+        text-ohm=\ensuremath{\Omega},
+    }
+\usepackage{textcomp}
+\usepackage{gensymb}
+\usepackage{wasysym}
+\usepackage[version=4]{mhchem}
+\usepackage{csvsimple}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{graphicx}
+    \graphicspath{{./img/}}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[parfill]{parskip}
+\usepackage{nth}
+\usepackage{csquotes}
+
+\usepackage{tikz}
+    \usetikzlibrary{%
+        calc,
+        external,
+        graphs,
+        plotmarks
+    }
+    \tikzexternalize[prefix=extern/]
+    \tikzexternaldisable
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+    \usepgfplotslibrary{%
+        colorbrewer,
+        groupplots,
+    }
+\pgfplotsset{%
+    compat=1.16,
+    table/search path={plotdata},
+    label style={font=\small},
+    tick label style={font=\footnotesize},
+    colormap/Set1-5,
+    colormap/Dark2,
+    log origin=infty,
+    every axis/.append style={%
+        tick style={semithick},
+        legend style={font=\small}
+    },
+}
+\usepackage[outputdir=latex_build]{minted}
+    \usemintedstyle{friendly}
+\usepackage{todonotes}
+    \let\todox\todo
+    \renewcommand{\todo}[1]{\todox[inline]{#1}}
+\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+\usepackage{cleveref}
+
+\usepackage[%
+    backend=biber,
+    natbib=true,
+    sorting=nyt,
+    url=false,
+    doi=true,
+    isbn=false,
+    maxbibnames=3,
+    maxcitenames=2,
+    date=year,
+    urldate=iso,
+    seconds=true,
+    style=numeric-comp,
+    autocite=superscript,
+]{biblatex}
+\addbibresource{literature.bib}
+
+
+
+\DeclareMathOperator{\Ex}{\ensuremath{\mathbb{E}}}
+\DeclareMathOperator{\Var}{Var}
+
+\DeclareSIUnit{\gauss}{G}
+\DeclareSIUnit{\parsec}{pc}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\newcommand{\CRPropa}{\texttt{CRPropa}}
+\newcommand{\inrange}[4]{\SIrange[range-phrase=\ensuremath{\le{#1}\le}]{#2}{#3}{#4}}
+\newcommand{\Lamor}{\ensuremath{r_{\mathrm{L}}}}
+\newcommand{\Brms}{\ensuremath{B_{\mathrm{rms}}}}
+\newcommand{\kmin}{\ensuremath{k_{\mathrm{min}}}}
+\newcommand{\kmax}{\ensuremath{k_{\mathrm{max}}}}
+\newcommand{\lmin}{\ensuremath{l_{\mathrm{min}}}}
+\newcommand{\lmax}{\ensuremath{l_{\mathrm{max}}}}
+\newcommand{\pitch}{\ensuremath{\theta_{\mathrm{pitch}}}}
+\newcommand{\Pesc}{\ensuremath{P_{\mathrm{esc}}}}
+\newcommand{\CR}{\mathrm{CR}}
+\newcommand{\pt}{\ensuremath{\partial_t}}
+\newcommand{\Div}{\ensuremath{\nabla\cdot}}
+\newcommand{\MA}{\ensuremath{\mathcal{M}_{\mathrm{A}}}}
+\newcommand{\Mc}{\ensuremath{\mathcal{M}_{cs}}}
+\newcommand{\MAsq}{\ensuremath{\MA^2}}
+\newcommand{\Mcsq}{\ensuremath{\Mc^2}}
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\Fe}{\ce{^{56}Fe}}
+\newcommand{\alphaflat}{\alpha_{\mathrm{flat}}}
+\newcommand{\alphafermi}{\alpha_{\mathrm{Fermi}}}
+\newcommand{\ie}{i.\,e.}
+\newcommand{\eg}{e.\,g.}
+
+
+
+\titlehead{Ruhr-Universität Bochum, SS 2019}
+\subject{\vspace*{-\baselineskip}Fortgeschrittenen-Praktikum: Theorie (804)}
+\title{Acceleration and Propagation of Cosmic Rays}
+\subtitle{}
+\author{Jeremiah Lübke, 108015230366}
+\date{\today}
+\publishers{Advisor: Dr.~Björn Eichmann}
+
+
+
+\begin{document}
+
+\maketitle
+
+\vspace{-1.7\baselineskip}
+\noindent\rule{\textwidth}{1.2pt}
+% \newpage
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+\newpage
+
+\input{sections/1-physical-fundamentals.tex}
+\input{sections/2-simulation-setup.tex}
+\input{sections/3-evaluation.tex}
+\input{sections/4-discussion.tex}
+
+\newpage
+
+\addcontentsline{toc}{section}{References}
+\nocite{*}
+\printbibliography[title=References]
+
+\newpage
+
+\appendix
+\input{sections/derivations.tex}
+
+\end{document}
+
+
+% vim: set ff=unix tw=79 sw=4 ts=4 et ic ai :

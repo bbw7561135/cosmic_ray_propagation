@@ -1,0 +1,2 @@
+1 MC run, 10_000 samples: A=3.128
+1_000 MC runs, each 10_000 samples: A=3.141(17)
