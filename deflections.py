@@ -4,6 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.constants as sc
+from scipy.stats import linregress
 from crpropa import *
 
 
@@ -12,6 +13,7 @@ NSIM = 10000
 # NSIM = 1
 
 OUTFILENAME = 'output/deflections_brms-%.0e_r-%.0e.txt'
+SAVEFILENAME = 'plotdata/deflections_%s_brms-%.0e_r-%.0e.csv'
 # OUTFILENAME = 'output/deflections_brms-%.0e_r-%.0e_one-particle_full-traj_ObserverSurface_%s.txt'
 LABEL = r'$B_{rms}=%.0e$, $r=%.0e$'
 
@@ -68,34 +70,80 @@ def run(B_rms):
 
 
 
-def plot_spectrum(B_rms, radius):
+def plot_spectrum(B_rms, radius, domain_borders, save=False):
     data = np.genfromtxt(OUTFILENAME % (B_rms, radius), names=True)
     E, E0 = data['E'], data['E0']
     weights = E0**(-SPECTRAL_INDEX_FLAT + SPECTRAL_INDEX_FERMI)
     N_noweights, _ = np.histogram(np.log10(E), bins=20)
-    N, bins = np.histogram(np.log10(E), weights=weights, bins=20)
+    N, bins = np.histogram(np.log10(E), weights=weights, bins=20, density=True)
     dE = (10**bins[1:] + 10**bins[:-1]) / 2.
     dR_L = dE / (sc.c * sc.e * B_rms)
     drho = dR_L / L_c
-    yerr = dE**2 * N / drho / np.sqrt(N_noweights)
-    plt.errorbar(dE / eV, dE**2 * N / drho, yerr, label=LABEL % (B_rms, radius))
+    yerr = drho**2 * N / drho / np.sqrt(N_noweights)
+    # yerr = N / drho / np.sqrt(N_noweights)
+    # plt.errorbar(dE / eV, dE**2 * N / drho, yerr, label=LABEL % (B_rms, radius))
+    plt.errorbar(drho, drho**2 * N / drho, yerr, label=LABEL % (B_rms, radius))
+    # plt.errorbar(drho, N / drho, yerr, label=LABEL % (B_rms, radius))
+
+    if save:
+        modificator = .1 if B_rms < B_RMS[-2] else 1
+        np.savetxt(SAVEFILENAME % ('error', B_rms, radius),
+                   np.vstack((drho, drho**2*N/drho * modificator, yerr * modificator)).T,
+                   header='dE N yerr', comments='')
+
+    domain = (drho > domain_borders[0]) & (drho < domain_borders[1])
+    domain = domain if np.count_nonzero(domain) > 1 else True
+    lr = linregress(np.log10(drho)[domain], np.log10(N/drho)[domain])
+    return lr.slope, lr.rvalue**2
 
 
 
-def plot_spectra():
+def plot_spectra(save=False):
+    domains = [
+        (1e-2, 2e-1),
+        (1e-2, 5e0),
+        (1e-2, 5e0),
+        (8e-1, 1e1),
+        (2e0, 3e1),
+        (4e0, 5e1),
+    ]
     plt.figure()
-    ax_idx = 221
-    for b in B_RMS:
+    # ax_idx = 221
+    ax_idx = 231
+    # for b in B_RMS:
+    for r, d in zip(RADII, domains):
         plt.subplot(ax_idx)
         plt.loglog(nonposx='clip', nonposy='clip')
         ax_idx += 1
-        for r in RADII:
-            plot_spectrum(b, r)
+        print('R = %.2f Mpc' % (r / Mpc))
+        # for r in RADII:
+        for b in B_RMS:
+            slope, r_sq = plot_spectrum(b, r, d, save)
+            print('\tBrms = %.0e nG:\talpha = %f, r_sq = %f'
+                    % (b, slope, r_sq))
         plt.legend()
 
 
+def plot_traj(B_rms, radius, save):
+    data = np.genfromtxt(OUTFILENAME % (B_rms, radius), names=True)
+    traj = data['D']
+    N, bins, _ = plt.hist(np.log10(traj), bins=50, density=True,
+                          histtype='step', label='Brms = %.0e nG' % B_rms)
 
-def compute_deflection_and_traj(B_rms, radius):
+    if save:
+        N_save = np.hstack((0, N, 0))
+        N_save[N_save == 0] = 1e-4
+        dbin = bins[1] - bins[0]
+        bins_save = np.hstack((bins[0]-dbin, bins))
+        np.savetxt(SAVEFILENAME % ('traj', B_rms, radius),
+                   # np.vstack((np.hstack((N, N[-1])), bins)).T,
+                   np.vstack((N_save, bins_save)).T,
+                   header='N bins', comments='')
+
+    return traj.mean(), traj.std()
+
+
+def plot_defl(B_rms, radius, save):
     def dot(x, y):
         return np.sum(x * y, axis=0)
     def norm(x):
@@ -105,22 +153,41 @@ def compute_deflection_and_traj(B_rms, radius):
     p, p0 = np.array([data['Px'], data['Py'], data['Pz']]), \
             np.array([data['P0x'], data['P0y'], data['P0z']])
     angle = np.rad2deg(np.arccos(dot(p, p0) / (norm(p) * norm(p0))))
-    traj_len = data['D']
 
-    return np.array([
-        angle.mean(), angle.std(), traj_len.mean(), traj_len.std()
-    ])
+    N, bins, _ = plt.hist(angle, bins=50, density=True, histtype='step',
+                          label='Brms = %.0e nG' % B_rms)
+
+    if save:
+        N_save = np.hstack((0, N, 0))
+        N_save[N_save == 0] = 1e-6
+        dbin = bins[1] - bins[0]
+        bins_save = np.hstack((bins[0]-dbin, bins))
+        np.savetxt(SAVEFILENAME % ('defl', B_rms, radius),
+                   # np.vstack((np.hstack((N, N[-1])), bins)).T,
+                   np.vstack((N_save, bins_save)).T,
+                   header='N bins', comments='')
+
+    return angle.mean(), angle.std()
 
 
+def plot_defl_or_traj(which='traj', save=False):
+    f, unit = {
+        'traj'  :   (plot_traj, 'Mpc'),
+        'defl'  :   (plot_defl, 'deg'),
+    }.get(which)
 
-def plot_deflection_and_traj():
-    for b in B_RMS:
-        print('B_rms = %.0e nG' % b)
-        for i, r in enumerate(RADII):
-            res = compute_deflection_and_traj(b, r)
-            print('\tR = %.0e:\tdefl = (%.2f +- %.2f) Degree\ttraj = (%.2f +- %.2f) Mpc' \
-                    % (r, res[0], res[1], res[2], res[3]))
-        print()
+    plt.figure()
+    ax_idx = 231
+    for r in RADII:
+        plt.subplot(ax_idx,
+                    title='r = %.2f Mpc' % (r / Mpc),
+                    yscale='log')
+        ax_idx += 1
+        print('R = %.2f Mpc' % (r / Mpc))
+        for b in B_RMS:
+            mean, std = f(b, r, save)
+            print('\tB_rms = %.0e nG:\t(%.2f +- %.2f) %s' % (b, mean, std, unit))
+        plt.legend()
 
 
 def plot_trajectories():
@@ -143,13 +210,14 @@ def plot_trajectories():
 
 
 if __name__ == '__main__':
-    pass
+    SAVE = True
     # print('turbulent correlation length: %e kpc\n' % L_c)
     # for b in B_RMS:
     #     run(b)
-    # plot_spectra()
-    # plot_deflection_and_traj()
-    plot_trajectories()
+    # plot_spectra(SAVE)
+    # plot_defl_or_traj('traj', SAVE)
+    plot_defl_or_traj('defl', SAVE)
+    # plot_trajectories()
     plt.show()
 
 

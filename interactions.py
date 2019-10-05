@@ -3,13 +3,14 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from collections import OrderedDict
+from collections import OrderedDict, Counter
 from crpropa import *
 
 
 NSIM = 10000
 
 OUTFILENAME = 'output/interactions-%s.txt'
+SAVEFILENAME = 'plotdata/interactions-%s.csv'
 
 
 SPECTRAL_INDICES = {
@@ -92,41 +93,100 @@ def run(c_specs, interaction, distances, description, with_nuclear_decay=True):
 
 
 
-def plot_all():
+def plot_all(save=False):
     plt.figure()
     ax_idx = 221
 
     for c_name in CANDIDATES.keys():
+        # if c_name == 'H':
+        #     continue
         for dist_name in DISTANCES.keys():
+        # for i_name in INTERACTIONS.keys():
             plt.subplot(ax_idx)
-            plt.loglog(nonposx='clip', nonposy='clip')
+            # plt.loglog(nonposx='clip', nonposy='clip')
+            # plt.semilogy()
+            plt.semilogx()
             ax_idx += 1
             descr = '%s-%s-%%s' % (c_name, dist_name)
 
-            plot_interaction(descr % 'free')
+            plot_interaction(descr % 'free', save)
             for i_name in INTERACTIONS.keys():
-                plot_interaction(descr % i_name)
+            # for dist_name in DISTANCES.keys():
+                plot_interaction(descr % i_name, save)
+                # plot_traj_length(descr % i_name)
+                # loss_time_scale(descr % i_name, dist_name)
+                # rel_energy_loss(descr % i_name)
+                # descr = '%s-%s-%%s' % (c_name, dist_name)
+                # decay_products(descr % i_name)
 
             plt.legend()
+            # print()
 
-    plt.show()
+    if not save:
+        plt.show()
+        # pass
 
 
 
-def plot_interaction(descr):
+def plot_interaction(descr, save):
     data = np.genfromtxt(OUTFILENAME % descr, names=True)
     E, E0 = data['E'], data['E0']
     weights = E0**(-SPECTRAL_INDICES['flat'] + SPECTRAL_INDICES['fermi'])
     N_noweights, _ = np.histogram(np.log10(E))
-    N, bins = np.histogram(np.log10(E), weights=weights)
+    N, bins = np.histogram(np.log10(E), weights=weights, density=True)
     dE = (10**bins[1:] + 10**bins[:-1]) / 2.
     yerr = N * dE / np.sqrt(N_noweights)
     plt.errorbar(dE / eV, N * dE, yerr, label=descr)
 
+    if save:
+        np.savetxt(SAVEFILENAME % descr,
+                   np.vstack((dE/eV, N*dE, yerr)).T,
+                   header='dE N yerr', comments='')
+
+
+def loss_time_scale(descr, dist):
+    data = np.genfromtxt(OUTFILENAME % descr, names=True)
+    D, E, E0 = data['D'], data['E'], data['E0']
+    m = np.array([nuclearMass(int(i)) for i in data['ID']])
+    weights = E0**(-SPECTRAL_INDICES['flat'] + SPECTRAL_INDICES['fermi'])
+    # t = np.sqrt(m / np.abs(E0 - E)) * DISTANCES[dist][1] / 60 / 60 / 24 / 365.25
+    # print('%s:\tmin = %e' % (descr, t.min()))
+    max_idx = np.argmax(np.abs(E0 - E))
+    # t = np.sqrt(m[max_idx] / np.abs(E0 - E)[max_idx]) * D[max_idx] * Mpc / 60 / 60 / 24 / 365.25
+    t = np.sqrt(m[max_idx] / np.abs(E0 - E)[max_idx]) * 100*Mpc / 60 / 60 / 24 / 365.25
+    print('%s:\tmin = %f' % (descr, t))
+
+
+def decay_products(descr):
+    from pprint import pprint
+    elements = np.array([
+        'n', 'H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne', 'Na', 'Mg',
+        'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr',
+        'Mn', 'Fe',
+    ])
+    def id_to_nucleus(i):
+        i = str(i)
+        A = i[-3:-1]
+        Z = i[-6:-4]
+        n = elements[int(Z)]
+        return n + A
+    data = np.genfromtxt(OUTFILENAME % descr, names=True, dtype=int)
+    ids = data['ID']
+    stats_raw  = Counter(ids)
+    total = ids.size
+    Fe56 = stats_raw.pop(nucleusId(56, 26))
+    print('\n' + descr)
+    print('decayed nuclei: %f %%' % ((1 - Fe56 / NSIM) * 100))
+    if len(stats_raw) != 0:
+        stats_arr = np.array(sorted(zip([id_to_nucleus(i) for i in
+            stats_raw.keys()], stats_raw.values()), key=lambda t: t[1]))
+        percent = stats_arr[:,1].astype(int) / (total - Fe56) * 100
+        pprint(list(zip(stats_arr[:,0][percent>1], percent[percent>1])))
+        print('traces: %f %%' % np.sum(percent[percent<1]))
 
 
 # run_all()
-plot_all()
+plot_all(False)
 
 
 
