@@ -32,6 +32,7 @@
 \usepackage{csvsimple}
 \usepackage{array}
 \usepackage{booktabs}
+\usepackage{multirow}
 \usepackage{graphicx}
     \graphicspath{{./img/}}
 \usepackage{float}
@@ -61,6 +62,7 @@
     table/search path={plotdata},
     label style={font=\small},
     tick label style={font=\footnotesize},
+    colormap/Paired,
     colormap/Set1-5,
     colormap/Dark2,
     log origin=infty,
@@ -123,7 +125,11 @@
 \renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
 \newcommand{\Fe}{\ce{^{56}Fe}}
 \newcommand{\alphaflat}{\alpha_{\mathrm{flat}}}
-\newcommand{\alphafermi}{\alpha_{\mathrm{Fermi}}}
+\newcommand{\alphafermi}{\ensuremath{\alpha_{\mathrm{Fermi}}}}
+\newcommand{\alphafalling}{\ensuremath{\alpha_{\mathrm{estimated}}}}
+\newcommand{\Robserver}{\ensuremath{R_{\mathrm{obs}}}}
+\newcommand{\traj}{\ensuremath{d_{\mathrm{traj}}}}
+\newcommand{\ablenkung}{\ensuremath{\theta_{\mathrm{defl}}}}
 \newcommand{\ie}{i.\,e.}
 \newcommand{\eg}{e.\,g.}
 
@@ -152,10 +158,11 @@
 
 \newpage
 
-\input{sections/1-physical-fundamentals.tex}
-\input{sections/2-simulation-setup.tex}
-\input{sections/3-evaluation.tex}
-\input{sections/4-discussion.tex}
+\input{sections/1-physical-fundamentals}
+\input{sections/2-simulation-setup}
+\input{sections/3-evaluation}
+\input{sections/4-discussion}
+\todo{add steering scripts?}
 
 \newpage
 
