@@ -14,7 +14,7 @@ SAVEFILENAME = 'plotdata/interactions-%s.csv'
 
 
 SPECTRAL_INDICES = {
-    'flat' : -1,        
+    'flat' : -1,
     'fermi' : -2,
 }
 

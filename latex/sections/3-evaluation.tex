@@ -1,0 +1,139 @@
+\section{Evaluation}
+\subsection{The Monte-Carlo method}
+\label{sec:eval-circle}
+The exact value of the unit circle's surface area is
+\begin{equation}
+    A_{\mathrm{circle,exact}}=\eval{\pi\,r^2}_{r=1}=\pi=3.141\dotso
+    \label{eq:circle-area-exact}
+\end{equation}
+While results of single MC runs may deviate rather noticeably,
+plotting the histogram of all MC runs reveals a uniform distribution
+centered around the exact value as expected from the central
+limit theorem (see \cref{fig:circle-area-hist}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{circle-area-dist}
+    \caption{Histogram of \num{1000} MC runs with mean and standard
+    deviation \num{3.141(17)}. Notice the corresponding normal
+distribution.}
+    \label{fig:circle-area-hist}
+\end{figure}
+
+\subsection{Reweighting}
+\label{sec:eval-rew}
+One starts with computing the normalized histograms of the resulting spectra,
+were the logarithm of the energies is used. The differential candidate number
+$\dd{N}/\dd{E}$ can be approximated by dividing the number of particles for a
+given bin by its width $\dd{E_i}=10^{\log(E_{i+1})-\log(E_{i})}$, where $E_{i},
+E_{i+1}$ are the bin's edges; $\dd{N}/\dd{E}$ is plotted against the central
+energies of the bins $10^{\log(E_{i+1})}+10^{\log(E_{i})}$ in
+loglog-representation. The uncertainties are computed according to Poisson
+statistics (\cref{eq:mc-std})
+\begin{equation*}
+    \Delta{y}=\frac{\dd{N}/\dd{E}}{\sqrt{N}}
+\end{equation*}
+were $N$ refers to the \emph{unweighted} and \emph{not normalized} number of
+candidates per bin.
+
+This is done for the energy spectra with $\alphaflat=-1$ and
+$\alphafermi=-2$ and for the reweighted flat spectrum
+($\alphaflat\to\alphafermi$, see \cref{eq:reweight}).
+
+\begin{figure}[ht]
+    \begin{subfigure}[b]{.75\textwidth}
+        \centering
+        % \input
+        \caption{Fermi spectrum}
+        \label{fig:rew-fermi}
+    \end{subfigure}
+    \begin{subfigure}[b]{.75\textwidth}
+        \centering
+        % \input
+        \caption{flat spectrum}
+        \label{fig:rew-flat}
+    \end{subfigure}
+    \begin{subfigure}[b]{.75\textwidth}
+        \centering
+        % \input
+        \caption{reweighted flat spectrum}
+        \label{fig:rew-rew}
+    \end{subfigure}
+    \caption{Normalized plots}
+    \label{fig:rew}
+\end{figure}
+
+The histogram of the Fermi spectrum (see \cref{fig:rew-fermi}) clearly shows
+the predominance of particles at lower energies and an approx.~linear (in
+the loglog-representation, slope$\sim-1$) decrease of particle numbers with
+increasing energy. This is also reflected in the increasing uncertainties,
+which scale as $\Delta{y}\propto1/\sqrt{N}$.
+While the spectral curve behaves approx.~as expected from first-order Fermi
+acceleration, a deviation is noticeable when looking at the fitted spectral
+index.
+Also note the \enquote{plateau} at the end of the spectrum, which is due to
+insufficient MC statistics in that area.
+
+On the other hand, the flat spectrum (see \cref{fig:rew-flat}) exhibits a
+uniform distribution of particle numbers across all energies and therefor
+consistently small uncertainties. When applying the weight
+$w_{E_0}=E_0^{1-2}=E_0^{-1}$ to this distribution, one obtains a spectrum,
+which is in good agreement with the theory, while also maintaining the
+well-behaved uncertainties (\cref{fig:rew-rew}).
+
+\emph{Note:} Due to the clear advantages of this technique, all following
+simulations will be performed with a flat spectrum and have their results
+reweighted to correspond to Fermi-theory.
+
+\todo{mention fluctuations when repeating simulations with unchanged
+parameters?}
+
+
+\subsection{Nuclear Interactions}
+\todo{remove photo-disint for protons}
+The influence of the individual interactions is analysed by looking at the
+differential candidate number $\dd{N}/\dd{E}$ times $E^2$. Then, with a
+log-scale on the x-axis, a power-law spectrum with $\alpha=-2$ appears as a
+horizontal line, which is convenient for identifying and discussing deviations
+from the expected curve.
+
+$\dd{N}/\dd{E}$ is computed as described in \cref{sec:eval-rew} and $E$
+describes the central bin values.
+
+When looking at the respective plots, one immediately recognizes the most
+important interactions for each setup:
+\begin{description}
+    \item[H close]
+        \begin{itemize}
+            \item photo-pion-prod.~with CMB
+        \end{itemize}
+    \item[H far]
+        \begin{itemize}
+            \item photo-pion-prod.~with CMB
+            \item electron-pair-prod.~with CMB
+        \end{itemize}
+    \item[Fe close]
+        \begin{itemize}
+            \item photo-pion-prod.~with CMB
+            \item photo-disint.~with CMB
+        \end{itemize}
+    \item[Fe far]
+        \begin{itemize}
+            \item photo-pion-prod.~with CMB
+            \item photo-pion-prod.~with IRB
+            \item photo-disint.~with CMB
+            \item photo-disint.~with IRB
+            \item electron-pair-prod.~with CMB
+        \end{itemize}
+\end{description}
+
+
+
+\subsection{Magnetic Deflection}
+\todo{compute and compare rigidities $\rho=r_L/l_c, r_L=E/ZeBc$}
+
+
+\subsection{Constraints on the Sources}
+
+
+% vim: set ff=unix tw=79 sw=4 ts=4 et ic ai :

@@ -13,6 +13,9 @@ N = 10_000
 # number of MC runs
 M = 1_000
 
+# plot settings
+plt.rcParams['figure.dpi'] = 300
+
 
 # single MC
 a = np.random.uniform(size=(2, N))
@@ -26,13 +29,16 @@ phi = np.linspace(0, np.pi/2, 100)
 x = np.cos(phi)
 y = np.sin(phi)
 
-plt.figure(figsize=(4, 4), dpi=300)
-plt.scatter(*a[:,in_circle], c='r', s=4, marker='.')
-plt.scatter(*a[:,~in_circle], c='k', s=4, marker='.')
+plt.figure(figsize=(4, 4))
+plt.subplot(111, aspect='equal')
+plt.scatter(*a[:,in_circle], c='tab:red', s=2.5, marker='.')
+plt.scatter(*a[:,~in_circle], c='tab:gray', s=2.5, marker='.')
 plt.plot(x, y, lw='2')
 plt.gca().set(xlim=(0, 1), ylim=(0, 1), xlabel='x', ylabel='y')
 plt.tick_params(which='both', length=0)
 plt.grid(False, which='both')
+plt.tight_layout()
+#  plt.savefig('figs/circle-area.pdf')
 
 
 # averaging multiple MC runs
@@ -46,12 +52,16 @@ print(f'Mean and std of {M:_d} MC runs with {N:_d} samples each: '
 x = np.linspace(3.08, 3.20, 200)
 y = np.exp(-(x-mean)**2 / (2*std**2)) / (std * sqrt(2*pi))
 
-plt.figure()
+plt.figure(figsize=(5, 3.75))
 plt.hist(area_many, density=True, label='data')
-plt.plot(x, y, label='limit normal distribution')
+plt.plot(x, y, lw=2.5, label='limit normal\ndistribution')
 plt.xlabel('area of unit circle')
 plt.ylabel('normalized number of occurrences')
-plt.legend()
+plt.xlim(3.08, 3.20)
+plt.ylim(0, 25)
+plt.legend(loc='upper left', handlelength=1.8, framealpha=1)
+plt.tight_layout()
+#  plt.savefig('figs/circle-area-dist.pdf')
 plt.show()
 
 

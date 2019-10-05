@@ -1,0 +1,145 @@
+\section{Simulation setup}
+\subsection{The Monte-Carlo method}
+In order to demonstrate the abilities of the Monte-Carlo approach, the area
+of the unit circle is to be computed stochastically. This is done by
+randomly sampling \num{10000} coordinates $(x,y)$ from $\mathcal{U}(0,1)$
+-- the continuous uniform distribution over the interval $[0,1]$ -- and
+counting those, which have a euclidean distance $<1$ from the origin (see
+\cref{fig:circle-area-scatter}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.6\textwidth]{circle-area}
+    \caption{Scatter plot of uniformly distributed random points. The circle
+    area obtained from this sample is $A=3.128$.}
+    \label{fig:circle-area-scatter}
+\end{figure}
+
+Because the points are distributed uniformly, the ratio of points in the
+square (\ie~all of them) and points in the quadrant of the circle equals the
+ratio of the square's and the quadrant's surface area:
+\begin{equation*}
+    \frac{N_{\mathrm{quadrant}}}{N_{\mathrm{total}}}
+    =\frac{A_{\mathrm{quadrant}}}{A_{\mathrm{square}}}
+\end{equation*}
+With $A_{\mathrm{square}}$ known to be one, the circle's surface area can
+be calculated:
+\begin{equation}
+    A_{\mathrm{circle}}=4\frac{N_{\mathrm{quadrant}}}{N_{\mathrm{total}}}
+    \label{eq:circle-area-mc}
+\end{equation}
+
+This simulation is then repeated \num{1000} times in order to
+obtain a dataset whose distribution and accuracy can be investigated.
+This can easily be done with \texttt{numpy}:
+\begin{minted}[%
+    frame=lines,
+    framesep=2mm,
+    baselinestretch=1.2,
+    bgcolor=black!20!white,
+    fontsize=\small,
+]{python}
+    >>> r = np.random.uniform(size=(2, NUMBER_OF_SAMPLES, NUMBER_OF_MC_RUNS))
+    >>> area = 4 * np.count_nonzero(r[0]**2 + r[1]**2 < 1, axis=0) / NUMBER_OF_SAMPLES
+    >>> area.mean(), area.std()
+\end{minted}
+
+
+\subsection{Reweighting}
+In order to get familiar with \CRPropa~and to demonstrate the reweighting, a
+simple simulation with the following setup is performed:
+
+Protons are propagated in 1D while neglecting interaction mechanisms and
+magnetic fields (the resulting energy spectrum at the observer will remain
+unchanged from the initial spectrum; in particular all propagated particles
+are detected bt the observer). Their sources are uniformly distributed
+between redshifts of $z=0$ and $z=2$ and emit particles according to a
+power-law energy spectrum from the interval \SIrange{1e18}{1e21}{\eV}. The
+simulation is performed once with a spectral index $\alpha=-1$ responsible for
+a flat energy distribution and once with a spectral index $\alpha=-2$ as
+expected from first-order Fermi acceleration, each time using \num{1000}
+particles.
+
+\emph{Note:} All following simulations will be performed with a spectral index
+$\alpha=-1$ and their results will be reweighted as needed.
+
+
+\subsection{Nuclear Interactions}
+\todo{remove photo-disint for protons}
+There are several extragalactic energy loss processes implemented in
+\CRPropa, whose characteristics are to be investigated for H and \Fe~nuclei on
+close (\SIrange{0}{10}{\mega\parsec}) and far
+(\SIrange{100}{1000}{\mega\parsec}) distances. For each of the four settings,
+eight simulations are performed, separately considering the individual
+processes:
+\begin{itemize}
+    \item without interaction
+    \item Redshift
+    \item Photo-Pion-Production
+    \item Photo-Disintegration
+    \item Electron-Pair-Production
+\end{itemize}
+where the last three processes are due to interactions with a given photon
+field (CMB, IRB). With \Fe, nuclear decay is considered additionally in all
+cases.
+
+The domain is 1D with uniformly distributed sources in the given distance
+interval.
+The emitted particles are drawn from a flat power-law spectrum from the
+interval \SI{1e17}{\eV} to $\text{Z}\times10^{21}\si{\eV}$ (considering the
+total charge of the given nuclei, therewith causing iron to have a higher
+maximal energy compared to protons), where those which fall below the minimum
+energy \SI{1e17}{\eV} are discarded. Each time \num{10000} candidates are
+propagated; all particles and their secondaries (in case of \Fe) are detected.
+
+
+\subsection{Magnetic Deflections}
+\label{sec:setup-defl}
+In order to investigate deflections of CR protons by a turbulent
+magnetic field, a simulation with a 3D domain is set up. \CRPropa~ships the
+necessary tools to create a 3D periodic grid (covering arbitrary volumes) on
+which a turbulent magnetic field according to Kolmogorov theory can be
+generated.
+
+The grid size is $256^3$ with a \SI{75}{\kilo\parsec} grid spacing, resulting
+in an extend of $(256\times\SI{75}{\kilo\parsec})^3$. The turbulence of the
+magnetic field behaves according to a power spectrum with spectral index
+$-11/3$ (instead of $-5/3$ as mentioned in \cref{sec:intro-turbulence},
+according to the manual) with a minimum and maximum length scale of
+\SI{170}{\kilo\parsec} and \SI{2000}{\kilo\parsec} respectively. Thus the
+resulting correlation length is \todox{value}$l_c=$.
+There are four simulations performed with varying root mean square field
+strengths $\Brms=\SIlist{50;20;10;1}{\nano\gauss}$.
+
+The source is now point-like and located at the center of the grid. It
+isotropically ejects protons with energies from a flat power-law spectrum,
+ranging from \SIrange{1e17}{1e20}{\electronvolt}. Instead of a single
+point-like observer, six observer spheres arranged concentrically around the
+source with radii
+$r_{\mathrm{sphere}}=[\numlist[list-final-separator={,}]{.05;.5;1;5;50;100}]\times
+l_c$ are defined, which detect \todox{all fields?}coordinates, momentum and
+energy of leaving particles. The particles are not removed on detection and
+thus can re-enter the spheres (however, due to implementation details, only
+leaving particles are detected). Further a maximum trajectory length
+$d_{\mathrm{max}}=\num{5e3}\times l_c$ (\ie~two orders of magnitude larger than
+the second largest observer sphere) is set to provide a termination condition
+for the simulation.
+
+All additional nuclear interaction mechanisms are turned of, in order to solely
+record the effects of the magnetic field.
+For each of the four runs, \num{10000} candidates are propagated.
+
+
+\subsection{Constraints on the Sources}
+The final task is to put parametrical constrains on possible CR sources. To
+obtain the data, the setup described in \cref{sec:setup-defl} is extended by
+adding nuclear interaction mechanisms for protons (Redshift,
+Photo-Pion-Production and Photo-Pair-Production; the last two once in
+interaction with the CMB and once with the IRB), while leaving all other
+parameters unchanged.
+
+Again four simulations for varying \Brms~and \num{10000} particles each are
+performed.
+
+
+% vim: set ff=unix tw=79 sw=4 ts=4 et ic ai :
