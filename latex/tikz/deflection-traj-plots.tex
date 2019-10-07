@@ -1,0 +1,105 @@
+\newcommand{\PlotOneDeflectionTrajectory}[2]{%
+    \edef\temp{%
+        \noexpand\addplot+ [%
+            const plot mark mid,
+            thick,
+        ] table [x=bins,y=N]
+            {deflections_traj_brms-#2_r-#1.csv};
+    }
+    \temp
+}
+
+\newcommand{\PlotOneSphereTraj}[1]{%
+    \pgfplotsforeachungrouped \bfield in {%
+            1e-13,
+            1e-12,
+            2e-12,
+            5e-12} {%
+        \PlotOneDeflectionTrajectory{#1}{\bfield}
+    }
+}
+
+
+\tikzexternalenable
+\tikzsetnextfilename{ext-defl-traj}
+
+\begin{tikzpicture}
+\begin{groupplot}[%
+    group style={%
+        % group name=energy loss plots,
+        group size=2 by 3,
+        xlabels at=edge bottom,
+        ylabels at=edge left,
+        % xticklabels at=edge bottom,
+        yticklabels at=edge left,
+        horizontal sep=2em,
+        vertical sep=4em,
+    },
+    % xmin=2e-2,xmax=2e3,
+    xmode=linear, ymode=log,
+    xlabel={$\log(\traj/\si{\mega\parsec})$},
+    ylabel={relative abundance},
+    width=8.5cm,height=6.375cm,
+    cycle list={[of colormap=Dark2]},
+    grid=major,
+    % title style={at={(.5,0)},below,yshift=-1em}
+    title style={above,align=center}
+]
+    \nextgroupplot[%
+        ymin=4e-4,ymax=2e1,
+        title={(a)~$\Robserver=\SI{24e-3}{\mega\parsec}$}]
+    \PlotOneSphereTraj{7e+20}
+
+    \nextgroupplot[%
+        % ymin=4e-4,ymax=1.5e1,
+        ymin=4e-4,ymax=2e1,
+        title={(b)~$\Robserver=\SI{.24}{\mega\parsec}$}]
+    \PlotOneSphereTraj{7e+21}
+
+    \nextgroupplot[%
+        ymin=1e-3,ymax=1.5e1,
+        title={(c)~$\Robserver=\SI{.48}{\mega\parsec}$}]
+    \PlotOneSphereTraj{1e+22}
+
+    \nextgroupplot[%
+        % ymin=2e-2,ymax=1e1,
+        ymin=1e-3,ymax=1.5e1,
+        title={(d)~$\Robserver=\SI{2.4}{\mega\parsec}$}]
+    \PlotOneSphereTraj{7e+22}
+
+    \nextgroupplot[%
+        % ymin=1e-2,ymax=3e0,
+        ymin=1e-2,ymax=4e0,
+        title={(e)~$\Robserver=\SI{24}{\mega\parsec}$}]
+    \PlotOneSphereTraj{7e+23}
+
+    \nextgroupplot[%
+        % ymin=2e-2,ymax=4e0,
+        ymin=1e-2,ymax=4e0,
+        title={(f)~$\Robserver=\SI{48}{\mega\parsec}$},
+        legend to name={DeflectionTrajLegend},
+        legend style={legend columns=2,
+            /tikz/every even column/.append style={column sep=2em}},
+        legend cell align=left,
+        legend transposed=true,
+    ]
+    \PlotOneSphereTraj{1e+24}
+
+    \legend{%
+        $\Brms=\SI{1}{\nano\gauss}$,
+        $\Brms=\SI{10}{\nano\gauss}$,
+        $\Brms=\SI{20}{\nano\gauss}$,
+        $\Brms=\SI{50}{\nano\gauss}$,
+    }
+
+\end{groupplot}
+
+    \path (group c1r3.south east) --
+        node[below,yshift=-3em]{\ref*{DeflectionTrajLegend}}
+        (group c2r3.south west);
+
+\end{tikzpicture}
+
+\tikzexternaldisable
+
+% vim: set ff=unix tw=79 sw=4 ts=4 et ic ai :

@@ -13,8 +13,9 @@ modeled analytically, but are instead accessible through a probabilistic
 description.
 
 \subsection{Reweighting}
+\label{sec:dis-rew}
 A simple and effective technique to obtain physically appropriate and
-consistently accurate results, by not wasting CPU-time due to unevenly sampling
+consistently accurate results, by not wasting CPU time due to unevenly sampling
 the available energies.
 
 \subsection{Nuclear Interactions}
@@ -30,13 +31,12 @@ The introduced loss time scale proves useful for comparisons of different
 simulations within this work and allows to investigate certain features in the
 obtained data more closely, yet it lacks physical meaning (giving raise to
 velocities $>c$; $\d_{\mathrm{scale}}$ being chosen so that the numbers
-\enquote{look nicely and comparably}).
+\enquote{look nice and comparable}).
 
 Speaking about the differences between the two candidate types, most
-observations seem to agree with explanations of the IRB having a significantly
-lower photon density and iron having a significantly higher cross section.
-Especially iron being treated as a bunch of single protons and neutrons fits in
-the picture.
+observations seem to agree with explanations of the IRB having a lower photon
+density and iron having a higher cross section. Especially iron being treated
+as a bunch of single protons and neutrons fits in the picture.
 
 Remarking conclusively, it is rather astonishing how much information can be
 drawn from such a \enquote{simple} one-dimensional simulation and how much can
@@ -44,6 +44,52 @@ therewith be learned about the physics of the situation.
 
 
 \subsection{Magnetic Deflection}
+At first it is to note that the results are partly non-physical (when related
+to the current age of the universe) as \dmax~was chosen slightly too large,
+however it is still in the same order of magnitude as \dAoU~and does not
+change the significance of the results (it should suffice to simply disregard
+the last bin of the trajectory length distribution when conducting further
+analysis). For future simulations it is advisable to avoid such an error with
+an eye on CPU time.
+
+When investigating the resonant interval, one finds that its upper limit first
+coincides approximately with the expected range $0.075<\rho<1$, but is shifted
+to higher rigidities with increasing radii (for
+$\Robserver=\SI{48}{\mega\parsec}$ the peak starts at $\rho\sim\num{50}$). In
+order to obtain the full peak and be able to have a look at the lower limit,
+one would have to re-run the simulations with lower \Emin.
+As to why this shift appears, no clear explanation seems obvious other than
+uncertainties due to approximations in the theoretical derivation.
+
+The results show that a turbulent magnetic field in the intergalactic medium is
+able by resonant scattering to transform an initial Fermi spectrum into
+something more similar to the observations and to produce an isotropic
+distribution at the observer. This is the case for
+$\Robserver\ge\SI{2.4}{\mega\parsec}$ with $\Brms\ge\SI{10}{\nano\gauss}$ and
+(as an interesting possibility including anisotropies at higher energies)
+$\Robserver\ge\SI{24}{\mega\parsec}$ with $\Brms=\SI{1}{\nano\gauss}$.
+
+Some additional questions, whose investigation might be interesting in this
+context:
+\begin{itemize}
+    \item Which value for $\Brms$ can be regarded as realistic? Is there a way
+        to theoretically estimate this quantity, perhaps in conjunction with
+        the plasma dynamics of the IGM?
+
+    \item A more thorough statistical investigation of the trajectory length
+        and angular distribution would be interesting. Can an underlying
+        probability density function be identified and a deeper connection to
+        phenomena such as random walks be found?
+
+    \item As the obtained distributions behave rather similar (especially for
+        sufficiently large \Robserver~and $\Brms\ge\SI{10}{\nano\gauss}$), the
+        question arises whether it would be adequate to simulate one case
+        (fixed \Brms) and obtain the other cases through the application of an
+        appropriate weight function. This would yield the possibility to
+        investigate a broader range of parameters, while saving CPU time (see
+        \cref{sec:dis-rew}).
+
+\end{itemize}
 
 
 \subsection{Constraints on the Sources}

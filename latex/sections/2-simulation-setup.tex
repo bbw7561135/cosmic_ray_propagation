@@ -1,4 +1,6 @@
 \section{Simulation setup}
+\emph{Note:} the steering scripts written for this experiment can be found
+online at \url{https://github.com/jerluebke/cosmic_ray_propagation}.
 \subsection{The Monte-Carlo method}
 In order to demonstrate the abilities of the Monte-Carlo approach, the area
 of the unit circle is to be computed stochastically. This is done by
@@ -105,8 +107,7 @@ in an extend of $(256\times\SI{75}{\kilo\parsec})^3$. The turbulence of the
 magnetic field behaves according to a power spectrum with spectral index
 $-11/3$ (instead of $-5/3$ as mentioned in \cref{sec:intro-turbulence},
 according to the manual) with a minimum and maximum length scale of
-\SI{170}{\kilo\parsec} and \SI{2000}{\kilo\parsec} respectively. Thus the
-resulting correlation length is \todox{value}$l_c=$.
+\SI{150}{\kilo\parsec} and \SI{2000}{\kilo\parsec} respectively.
 There are four simulations performed with varying root mean square field
 strengths $\Brms=\SIlist{50;20;10;1}{\nano\gauss}$.
 
@@ -122,7 +123,7 @@ detection). The particles are not removed on detection and
 thus can re-enter the spheres (however, due to implementation details, only
 leaving particles are detected). Further a maximum trajectory length
 $d_{\mathrm{max}}=\num{5e3}\times l_c$ (\ie~two orders of magnitude larger than
-the second largest observer sphere) is set to provide a termination condition
+the second largest observer sphere is set to provide a termination condition
 for the simulation.
 
 All additional nuclear interaction mechanisms are turned of, in order to solely

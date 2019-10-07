@@ -43,7 +43,7 @@ $\alphafermi=-2$ and for the reweighted flat spectrum
 \input{tikz/reweighting-hist}
 \begin{figure}[b!]
     \centering
-    \begin{subfigure}[b]{.75\textwidth}
+    \begin{subfigure}[t]{.5\textwidth}
         \centering
         \ReweightingAxis{-2.00}{None}{18.794}{21.54}{fermi}
         % \includegraphics[width=\textwidth]{extern/ext-reweighting-fermi}
@@ -55,7 +55,7 @@ $\alphafermi=-2$ and for the reweighted flat spectrum
 \begin{figure}[b!]
     \ContinuedFloat
     \centering
-    \begin{subfigure}[b]{.75\textwidth}
+    \begin{subfigure}[t]{.5\textwidth}
         \centering
         \ReweightingAxis{-1.00}{None}{18.793}{21.795}{flat}
         % \includegraphics[width=\textwidth]{extern/ext-reweighting-flat}
@@ -67,7 +67,7 @@ $\alphafermi=-2$ and for the reweighted flat spectrum
 \begin{figure}[t!]
     \ContinuedFloat
     \centering
-    \begin{subfigure}[b]{.75\textwidth}
+    \begin{subfigure}[t]{.5\textwidth}
         \centering
         \ReweightingAxis{-1.00}{-2.00}{18.795}{21.793}{reweight}
         % \includegraphics[width=\textwidth]{extern/ext-reweighting-reweight}
@@ -126,7 +126,6 @@ are depicted in \cref{fig:interactions}.
 \begin{figure}[ht!]
     \centering
     \input{tikz/interaction-plots}
-    % \includegraphics{extern/ext-interactions}
     \caption{Normalized energy spectra $\dd{N}/\dd{E}\times{E^2}$ vs.~$E$ for
         all cases}
     \label{fig:interactions}
@@ -403,29 +402,171 @@ scale length $d_{\mathrm{scale}}=\SI{100}{\mega\parsec}$ was chosen (see
 
 
 \subsection{Magnetic Deflection}
-\todo{%
-compute and compare rigidities $\rho=r_L/l_c, r_L=E/ZeBc$
+The deflections experienced by the trajectories of CRs due to turbulent
+magnetic fields are investigated by discussing the
+\begin{enumerate}[label=\textbf{(\roman*)}]
+    \item the differential candidate number per rigidity $\dd{N}/\dd{\rho}$
+        times $\rho^2$, with $\rho=\Lamor/l_c$, $\Lamor=E/ZeBc$ and its
+        deviation from the initial power-law spectrum with $\alpha=-2$
+        (the spectrum is obtained as described in \cref{sec:eval-rew}; see
+        \cref{fig:deflection-spectra}),
+    \item the distributions of trajectory lengths (see
+        \cref{fig:deflection-traj}), and
+    \item the distributions of deflection angles between the momentum vectors
+        initially at the source and at the point of detection (see
+        \cref{fig:deflection-defl}).
+\end{enumerate}
 
-plot cr spectrum $\dd{N}/\dd{\rho}, \rho=\Lamor/l_c$
+But at first, regarding some important numbers:
+\begin{itemize}
+    \item With $\lmin=\SI{150}{\kilo\parsec}$ and
+        $\lmax=\SI{2000}{\kilo\parsec}$ the expected resonant regime is
+        \[\lmin/\lmax=0.075<\rho<1\]
 
-mean and std of deflection (note: only leaving particles are detected)
+    \item Further, with $\lmin$ and $\lmax$ given, \CRPropa~calculates the
+        correlation length to $l_c=\SI{.48}{\mega\parsec}$, from which one has
+        the radii of the six observer spheres:
+        \[\Robserver=\SIlist{24e-3;0.24;0.48;2.4;24;48}{\mega\parsec}\]
+        These distances are the minimally possible trajectory lengths,
+        corresponding to candidates travelling without deflection from the
+        source to the point of detection.
 
-mean and std of trajectory length
+        In the plots, this is represented by the first bins with
+        \[\log(\Robserver/\si{\mega\parsec})=
+            \numlist{-1.62;-0.62;-0.32;0.38;1.38;1.68}.\]
 
-incl.~distributions for above two
+    \item The physical upper limit for the trajectory lengths is
+        $\dAoU=\SI{4231}{\mega\parsec}$, which is the light-travel
+        distance corresponding to the age of the universe with
+        \SI{13.8e9}{\jahr}. This is enforced by setting a maximum trajectory
+        length as a termination condition for the simulation.
+        However, due to an index error in the steering script, not the second
+        largest, but the largest radius was chosen for its computation,
+        resulting in $\dmax=\SI{4800}{\mega\parsec}$, corresponding to a
+        light-travel distance of \SI{15.7e9}{\jahr}.
 
-effect of B on the energy spectrum
+        In the plots, these values are represented by the last bins with
+        \[\log(\dAoU/\si{\mega\parsec})=3.63
+            \qq{and}\log(\dmax/\si{\mega\parsec})=3.68.\]
+\end{itemize}
 
-changes of mean deflection based on B, d (upper limit?)
+\begin{description}
+    \item[Rigidity Spectra]
+        The resulting spectra are plotted in \cref{fig:deflection-spectra}.
+        Resonant scattering shows itself as peaks in those spectra,
+        \ie~the flux at resonant rigidities is amplified (candidates below the
+        peak gain, while those above lose energy), which results in a deviation
+        from $\alpha=-2$.
 
-changes of mean trajectory based on B, d (physics based upper limit? -> c, age
-of the universe)
+        With increasing radii the resonant regime is shifted to higher
+        rigidities.
+        This regime seems to be identical for all field strengths at a fixed
+        radius. Further, the estimated spectral indices of the falling edges of
+        the resonant peaks at a given radius are very similar (see
+        \cref{tab:defl}; the exception being $\Brms=\SI{1}{\nano\gauss}$ and
+        $\SI{10}{\nano\gauss}$ at $\Robserver=\SI{24e-3}{\mega\parsec}$, which
+        is due to those curves not yet falling into the resonant interval).
 
-in what range can a UHECR source produce an isotropic distribution at the
-earth?
-}
+        Since $\rho\propto1/\Brms$, the curves for smaller field strengths are
+        relatively shifted to higher rigidities according to their respective
+        scale factor.
+        Because of this shift the curves of smaller field strengths fall into
+        the resonant regime later, thus exhibiting less scattering in the
+        investigated interval, while having the same energy.
 
-\begin{table}
+    \item[Trajectory Lengths]
+        The distributions of trajectory lengths observed at the six observer
+        spheres are plotted in \cref{fig:deflection-traj}.
+        Their physical limitations and how they are represented in the plots is
+        discussed above.
+
+        For small radii, the first bins (\ie~undeflected candidates) dominate
+        the distributions. For $\Brms\ge\SI{10}{\nano\gauss}$ a small irregular
+        peak is found at longer trajectories (the irregularities being due to
+        statistics, because only a few particles are scattered at this point).
+        With increasing radii, this peak broadens, grows more regular (as more
+        particles are scattered) and its maximum shifts to the right. The
+        initial peak at the first bin decreases in height and the local minimum
+        between the two peaks becomes more distinct.
+
+        This development continues with the second peak shifting eventually out
+        of the range of possible trajectories and particles accumulating at the
+        high end of the spectrum, almost resembling a power law.
+        At the farthest radius the initial peak is still recognizable for all
+        field strengths, but at different intensities: for
+        $\Brms=\SI{50}{\nano\gauss}$ it almost vanishes, while for
+        $\Brms=\SI{1}{\nano\gauss}$ it is still stronger than the shifted peak.
+        Additionally, while the rising edge of the shifted peak is rather
+        regular for $\Brms\ge\SI{10}{\nano\gauss}$, for
+        $\Brms=\SI{10}{\nano\gauss}$ statistical irregularities remain
+        recognizable.
+
+        \emph{Note:} Since candidates are not removed upon detection, they can
+        be detected multiple times by the same sphere and contribute with
+        larger trajectories in the resonant case.
+
+    \item[Deflection Angles]
+        The distributions of deflection angles observed at the six observer
+        spheres are plotted in \cref{fig:deflection-defl}. A range from
+        $\ablenkung=\SI{0}{\degree}$ (no deflection) to
+        $\ablenkung=\SI{180}{\degree}$ (candidate completely inverses direction
+        of travel) is covered.
+
+        The development for increasing radii is similar as above: at first one
+        has a strong peak in the first bins (\ie~minimal deflection) with a
+        smaller irregular peak for $\Brms\ge\SI{10}{\nano\gauss}$. This peaks
+        shifts to the right, grows broader and more regular, eventually forming
+        a half-circle (in semilog-representation) centered around
+        \SI{90}{\degree}.
+        For larger field strengths the initial peak sooner or later disappears,
+        while it remains noticeable for $\Brms=\SI{1}{\nano\gauss}$.
+\end{description}
+
+When comparing these observations, there are a few things to note:
+\begin{itemize}
+    \item The development of the angular and trajectory length distributions
+        for increasing radii is reflected by the averages those distributions
+        (listed in \cref{tab:defl}).
+
+        The averages of the trajectory lengths quickly grow (approx.~like a
+        power law), while those for different field strengths at a fixed radius
+        lie within the same order of magnitude (the exception being
+        $\Brms=\SI{1}{\nano\gauss}$ at some instances).
+
+        For the deflection angles the averages converge to \SI{90}{\degree},
+        with $\Brms=\SI{1}{\nano\gauss}$ lagging behind due to the remaining
+        initial peak.
+
+    \item The large standard deviations of the distributions reflect on their
+        spread-out character with sometimes multiple peaks. For the trajectory
+        lengths at $\Robserver<\SI{24}{\mega\parsec}$ and for the deflection
+        angles at $\Robserver<\SI{2.4}{\mega\parsec}$ the standard deviations
+        are distinctly larger than the averages (in the first case even by an
+        order of magnitude!) and therefore are not suitable to construct a
+        confidence interval in order to describe the distribution: this would
+        result in non-physical results (\ie~$\traj<0$).
+
+    \item Some resemblance between the developments of all three quantities
+        (rigidity spectra, trajectory lengths and deflection angles) can be
+        identified:
+
+        At small radii, the scattering due to $\Brms=\SI{50}{\nano\gauss}$
+        clearly dominates, but the difference with the other cases
+        $\Brms\ge\SI{10}{\nano\gauss}$ quickly becomes less significant as they
+        grow highly similar to each other (except for the initial peak in the
+        trajectory length distribution and a small segment at the higher end in
+        the rigidity spectrum).
+
+        The interesting case here is $\Brms=\SI{1}{\nano\gauss}$, whose
+        spectrum remains undisturbed for $\rho>\num{5e1}$
+        (\ie~$E>\SI{2.2e19}{\eV}$). This un-scattered flux causes the peaks of
+        the initial bins in the other two distributions. These parameters
+        could provide and approach to explain the observed anisotropy in the
+        arrival directions at those high energies.
+
+\end{itemize}
+
+\begin{table}[ht!]
     \centering
     \begin{tabular}{SSSSS}
         \toprule
@@ -478,11 +619,159 @@ earth?
         & 50    & -3.37 & 2726.14(135104) & 89.52(3906) \\
         \bottomrule
     \end{tabular}
+    \caption{%
+        Spectral index of the falling edge of the resonance peak \alphafalling,
+        averaged trajectory length \traj~and averaged deflection angle
+        \ablenkung~for each observer sphere (given by \Robserver) and for each
+        simulation (given by \Brms)
+    }
+    \label{tab:defl}
 \end{table}
+
+\begin{figure}[p]
+    \centering
+    \input{tikz/deflection-spectra-plots}
+    \caption[rigidity spectra]{%
+        Normalized energy spectra (in terms of the rigidity $\rho=\Lamor/l_c$)
+        $\rho^2\times\dd{N}/\dd{\rho}$ vs.~$\rho$.
+
+        \emph{Note:} The curve of $\Brms=\SI{1}{\nano\gauss}$ has been
+        multiplied by a scale factor $10^{-1}$ to move it closer to the other
+        curves for better comparability.
+    }
+    \label{fig:deflection-spectra}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \input{tikz/deflection-traj-plots}
+    \caption{Normalized distribution of the trajectory lengths \traj~in
+    loglog-representation}
+    \label{fig:deflection-traj}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \input{tikz/deflection-defl-plots}
+    \caption{Normalized distribution of the deflection angles \ablenkung}
+    \label{fig:deflection-defl}
+\end{figure}
 
 
 
 \subsection{Constraints on the Sources}
+\todo{different way to compute $\ablenkung$, due to implementation (only
+leaving candidates are detected), the distribution is centered around 45°}
+
+evaluation procedure:
+
+inverse simulation, result obtained at earth by reweighting (observer size:
+milky way) -> flux $\CRFlux=r^2\dd{N}/\dd{A}^2\dd{t}$
+
+expected behaviour:
+$\CRFlux(\SI{5}{\exa\eV}\le{E}\le\SI{30}{\exa\eV})\propto E^{-2.5}$
+and high isotropy
+
+plotted spectra $E^{-2.5}\times\CRFlux$ vs.~$E$ and identified possible
+(linear) domains.
+For energies in those domains, alpha was fitted via ODR, with red.~$\chi^2$
+test. This was repeated for a different source distribution (-> reweighting).
+
+The deflections are this time computed from the line of sight and the final
+momentum (different to above) -> due to implementation detail only in [0°,
+90°].
+Deflections were plotted and averaged (independent of source distribution) for
+the above mentioned energy interval.
+
+\todo{discuss good candidates and deduce therefrom source constraints}
+
+while \Brms=\SI{1}{\nano\gauss} shows somehow irregular but good isotropy even
+for \SI{2.4}{\mega\parsec}, the spectrum is not very satisfying -> longer
+distances or stronger \Brms.
+
+CR flux at greater energies does not match the observations (expected: stronger
+decline, here: the opposite)
+
+Additional influences\todox{put in discussion}: iron nuclei
+
+what about the GZK-cutoff?
+
+list the confusing things
+
+
+
+\begin{landscape}
+
+\begin{figure}[t]
+    \begin{subfigure}[t]{\textwidth}
+        \centering
+        \input{tikz/constraints-spectrum-fermi-plots}
+        \caption{Source spectral index $\alphasource=-2$, according to Fermi's theory}
+        \label{fig:constraints-fermi}
+        \vspace*{\baselineskip}
+    \end{subfigure}
+
+    \begin{subfigure}[t]{\textwidth}
+        \centering
+        \input{tikz/constraints-spectrum-mod-plots}
+        \caption{Modified source spectral index $\alphasource=-2.6$}
+        \label{fig:constraints-mod}
+    \end{subfigure}
+    \caption{Normalized flux spectra for two different source distributions}
+    \label{fig:constraints}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \input{tikz/constraints-defl-plots}
+    \caption{Normalized distribution of deflection angles for the energy
+        intervals given in \cref{tab:constr}}
+    \label{fig:constrains-defl}
+\end{figure}
+
+\begin{table}[p]
+    \centering
+    \begin{tabular}{*{9}{S}}
+        \toprule
+        {\multirow{2}{*}{\Robserver/\si{\mega\parsec}}} &
+        {\multirow{2}{*}{\Brms/\si{\nano\gauss}}} &
+        {\multirow{2}{*}{\Emin/\si{\exa\eV}}} &
+        {\multirow{2}{*}{\Emax/\si{\exa\eV}}} &
+        \multicolumn{2}{c}{$\alphasource=-2.0$} &
+        \multicolumn{2}{c}{$\alphasource=-2.6$} &
+        {\multirow{2}{*}{\ablenkung/\si{\degree}}} \\
+        \cmidrule{5-8}
+        & & & & {\alphafalling} & {\redchisq} & {\alphafalling} & {\redchisq} & \\
+        \midrule
+        {\multirow{3}{*}{\num{2.4}}}
+        & 1     & 1 & 3.5   & -2.02(8)  & .57   & -2.62(9)  & .74   & 41.44(1942)   \\
+        & 10    & 3 & 40    & -1.93(3)  & 1.27  & -2.54(2)  & 1.18  & 43.72(1956)   \\
+        & 50    & 8 & 150   & -1.97(2)  & 2.08  & -2.55(2)  & 1.80  & 44.49(1959)   \\
+        \cmidrule{1-9}
+%
+        {\multirow{3}{*}{\num{24}}}
+        & 1     & 2 & 10    & -2.55(6)  & .74   & -3.17(7)  & .88   & 44.01(1957)   \\
+        & 10    & 7 & 100   & -2.37(4)  & 9.87  & -2.92(5)  & 11.28 & 44.54(1966)   \\
+        & 50    & 30& 300   & -1.75(3)  & 1.35  & -2.22(2)  & 1.05  & 44.61(1966)   \\
+        \cmidrule{1-9}
+%
+        {\multirow{3}{*}{\num{48}}}
+        & 1     & 2 & 15    & -2.31(3)  & .99   & -2.93(3)  & 1.01  & 44.07(1949)   \\
+        & 10    & 15& 100   & -2.02(7)  & 5.12  & -2.48(8)  & 5.21  & 44.35(1940)   \\
+        & 50    & 20& 300   & -1.30(8)  & 25.00 & -1.68(11) & 52.96 & 44.53(1969)   \\
+        \bottomrule
+    \end{tabular}
+    \caption{%
+        For each radius and each field strength the chosen energy intervals,
+        including the fitted spectral indices and averaged deflection angles in
+        those intervals are listed. The spectral indices were fitted for two
+        different source distributions and are accompanied by their respective
+        reduced $\chi^2$ test.
+    }
+    \label{tab:constr}
+\end{table}
+
+\end{landscape}
 
 
 % vim: set ff=unix tw=79 sw=4 ts=4 et ic ai :

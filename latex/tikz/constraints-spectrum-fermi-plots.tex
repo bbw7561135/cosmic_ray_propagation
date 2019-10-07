@@ -1,0 +1,82 @@
+\def\source{-2.0}
+
+\newcommand{\PlotOneConstraint}[3]{%
+    \edef\temp{%
+        \noexpand\addplot+ [%
+            thick,
+            error bars/.cd,
+                y dir=both,y explicit,
+                error bar style={thick},
+        ] table [x=dE,y=N,y error=yerr]
+            {constraints_spectrum-#1_brms-#3_r-#2.csv};
+    }
+    \temp
+}
+
+\newcommand{\PlotAllConstraints}[2]{%
+    \pgfplotsforeachungrouped \bfield in {%
+            1e-13,
+            1e-12,
+            5e-12} {%
+        \PlotOneConstraint{#1}{#2}{\bfield}
+    }
+}
+
+
+\tikzexternalenable
+\tikzsetnextfilename{ext-constraints-fermi}
+
+\begin{tikzpicture}
+\begin{groupplot}[%
+    group style={%
+        % group name=energy loss plots,
+        group size=3 by 1,
+        xlabels at=edge bottom,
+        ylabels at=edge left,
+        xticklabels at=edge bottom,
+        % yticklabels at=edge left,
+    },
+    % xmin=2e-2,xmax=2e3,
+    xmode=log, ymode=log,
+    xlabel={$E/\si{\eV}$},
+    ylabel={$E^{2.5}\times{\CRFlux}/$a.u.},
+    width=8.5cm,height=6.375cm,
+    cycle list={[of colormap=Dark2]},
+    grid=major,
+    % title style={at={(.5,0)},below,yshift=-1em}
+    title style={above,align=center}
+]
+    \nextgroupplot[%
+        title={(a)~$\Robserver=\SI{2.4}{\mega\parsec}$}]
+    \PlotAllConstraints{\source}{7e+22}
+
+    \nextgroupplot[%
+        title={(b)~$\Robserver=\SI{24}{\mega\parsec}$}]
+    \PlotAllConstraints{\source}{7e+23}
+
+    \nextgroupplot[%
+        title={(c)~$\Robserver=\SI{48}{\mega\parsec}$},
+        legend to name={ConstraintsLegend-fermi},
+        legend style={legend columns=3,
+            /tikz/every even column/.append style={column sep=2em}},
+        legend cell align=left,
+    ]
+    \PlotAllConstraints{\source}{1e+24}
+
+    \legend{%
+        $\Brms=\SI{1}{\nano\gauss}$,
+        $\Brms=\SI{20}{\nano\gauss}$,
+        $\Brms=\SI{50}{\nano\gauss}$,
+    }
+
+\end{groupplot}
+
+    \path (group c1r1.south east) --
+        node[below,yshift=-3em]{\ref*{ConstraintsLegend-fermi}}
+        (group c3r1.south west);
+
+\end{tikzpicture}
+
+\tikzexternaldisable
+
+% vim: set ff=unix tw=79 sw=4 ts=4 et ic ai :

@@ -41,6 +41,7 @@
 \usepackage[parfill]{parskip}
 \usepackage{nth}
 \usepackage{csquotes}
+\usepackage{pdflscape}
 
 \usepackage{tikz}
     \usetikzlibrary{%
@@ -103,12 +104,15 @@
 
 \DeclareSIUnit{\gauss}{G}
 \DeclareSIUnit{\parsec}{pc}
+\DeclareSIUnit{\jahr}{yr}
 
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 \newcommand{\CRPropa}{\texttt{CRPropa}}
 \newcommand{\inrange}[4]{\SIrange[range-phrase=\ensuremath{\le{#1}\le}]{#2}{#3}{#4}}
 \newcommand{\Lamor}{\ensuremath{r_{\mathrm{L}}}}
 \newcommand{\Brms}{\ensuremath{B_{\mathrm{rms}}}}
+\newcommand{\Emin}{\ensuremath{E_{\mathrm{min}}}}
+\newcommand{\Emax}{\ensuremath{E_{\mathrm{max}}}}
 \newcommand{\kmin}{\ensuremath{k_{\mathrm{min}}}}
 \newcommand{\kmax}{\ensuremath{k_{\mathrm{max}}}}
 \newcommand{\lmin}{\ensuremath{l_{\mathrm{min}}}}
@@ -127,9 +131,14 @@
 \newcommand{\alphaflat}{\alpha_{\mathrm{flat}}}
 \newcommand{\alphafermi}{\ensuremath{\alpha_{\mathrm{Fermi}}}}
 \newcommand{\alphafalling}{\ensuremath{\alpha_{\mathrm{estimated}}}}
+\newcommand{\alphasource}{\ensuremath{\alpha_{\mathrm{source}}}}
 \newcommand{\Robserver}{\ensuremath{R_{\mathrm{obs}}}}
 \newcommand{\traj}{\ensuremath{d_{\mathrm{traj}}}}
+\newcommand{\dmax}{\ensuremath{d_{\mathrm{max}}}}
+\newcommand{\dAoU}{\ensuremath{d_{\mathrm{AoU}}}}
 \newcommand{\ablenkung}{\ensuremath{\theta_{\mathrm{defl}}}}
+\newcommand{\redchisq}{red.~$\chi^2$}
+\newcommand{\CRFlux}{\ensuremath{\Phi_{\mathrm{CR}}}}
 \newcommand{\ie}{i.\,e.}
 \newcommand{\eg}{e.\,g.}
 
@@ -162,7 +171,6 @@
 \input{sections/2-simulation-setup}
 \input{sections/3-evaluation}
 \input{sections/4-discussion}
-\todo{add steering scripts?}
 
 \newpage
 
