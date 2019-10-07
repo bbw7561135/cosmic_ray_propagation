@@ -79,10 +79,11 @@ def plot_spectrum(B_rms, radius, domain_borders, save=False):
     dE = (10**bins[1:] + 10**bins[:-1]) / 2.
     dR_L = dE / (sc.c * sc.e * B_rms)
     drho = dR_L / L_c
-    yerr = drho**2 * N / drho / np.sqrt(N_noweights)
+    yerr = dE**2 * N / dE / np.sqrt(N_noweights)
+    plt.errorbar(dE / eV, dE**2 * N / dE, yerr, label=LABEL % (B_rms, radius))
+    # yerr = drho**2 * N / drho / np.sqrt(N_noweights)
+    # plt.errorbar(drho, drho**2 * N / drho, yerr, label=LABEL % (B_rms, radius))
     # yerr = N / drho / np.sqrt(N_noweights)
-    # plt.errorbar(dE / eV, dE**2 * N / drho, yerr, label=LABEL % (B_rms, radius))
-    plt.errorbar(drho, drho**2 * N / drho, yerr, label=LABEL % (B_rms, radius))
     # plt.errorbar(drho, N / drho, yerr, label=LABEL % (B_rms, radius))
 
     if save:
@@ -124,11 +125,13 @@ def plot_spectra(save=False):
         plt.legend()
 
 
-def plot_traj(B_rms, radius, save):
+def plot_traj(B_rms, radius, save, plot=True):
     data = np.genfromtxt(OUTFILENAME % (B_rms, radius), names=True)
     traj = data['D']
-    N, bins, _ = plt.hist(np.log10(traj), bins=50, density=True,
-                          histtype='step', label='Brms = %.0e nG' % B_rms)
+
+    if plot:
+        N, bins, _ = plt.hist(np.log10(traj), bins=50, density=True,
+                              histtype='step', label='Brms = %.0e nG' % B_rms)
 
     if save:
         N_save = np.hstack((0, N, 0))
@@ -143,7 +146,7 @@ def plot_traj(B_rms, radius, save):
     return traj.mean(), traj.std()
 
 
-def plot_defl(B_rms, radius, save):
+def plot_defl(B_rms, radius, save, plot):
     def dot(x, y):
         return np.sum(x * y, axis=0)
     def norm(x):
@@ -154,8 +157,9 @@ def plot_defl(B_rms, radius, save):
             np.array([data['P0x'], data['P0y'], data['P0z']])
     angle = np.rad2deg(np.arccos(dot(p, p0) / (norm(p) * norm(p0))))
 
-    N, bins, _ = plt.hist(angle, bins=50, density=True, histtype='step',
-                          label='Brms = %.0e nG' % B_rms)
+    if plot:
+        N, bins, _ = plt.hist(angle, bins=50, density=True, histtype='step',
+                              label='Brms = %.0e nG' % B_rms)
 
     if save:
         N_save = np.hstack((0, N, 0))
@@ -190,6 +194,20 @@ def plot_defl_or_traj(which='traj', save=False):
         plt.legend()
 
 
+def plot_mean_defl_or_traj(which='traj'):
+    f = {'traj' : plot_traj, 'defl' : plot_defl}.get(which)
+
+    res = np.zeros((RADII.size, B_RMS.size, 2))
+
+    plt.figure()
+    plt.subplot(111)
+
+    for j, b in enumerate(B_RMS):
+        for i, r in enumerate(RADII):
+            res[i,j] = f(b, r, False, False)
+        plt.errorbar(RADII, res[:,j,0], res[:,j,1])
+
+
 def plot_trajectories():
     import glob
     from mpl_toolkits.mplot3d import Axes3D
@@ -210,14 +228,16 @@ def plot_trajectories():
 
 
 if __name__ == '__main__':
-    SAVE = True
+    SAVE = False
     # print('turbulent correlation length: %e kpc\n' % L_c)
     # for b in B_RMS:
     #     run(b)
-    # plot_spectra(SAVE)
+    plot_spectra(SAVE)
     # plot_defl_or_traj('traj', SAVE)
-    plot_defl_or_traj('defl', SAVE)
+    # plot_defl_or_traj('defl', SAVE)
     # plot_trajectories()
+    # plot_mean_defl_or_traj('traj')
+    # plot_mean_defl_or_traj('defl')
     plt.show()
 
 
