@@ -1,0 +1,87 @@
+\newcommand{\PlotOneInteraction}[3]{%
+    \edef\temp{%
+        \noexpand\addplot+ [%
+            thick,
+            error bars/.cd,
+                y dir=both,y explicit,
+                error bar style={thick},
+        ] table [x=dE,y=N,y error=yerr]
+            {interactions-#1-#2-#3.csv};
+    }
+    \temp
+}
+
+\newcommand{\PlotAllInteractions}[2]{%
+    \PlotOneInteraction{#1}{#2}{free}
+    % \addlegendimage{empty legend}
+    \pgfplotsforeachungrouped \kind in {%
+            Redshift,
+            PhotoPionCMB,
+            PhotoPionIRB,
+            ElectronPairCMB,
+            ElectronPairIRB,
+            PhotoDisCMB,
+            PhotoDisIRB} {%
+        \PlotOneInteraction{#1}{#2}{\kind}
+    }
+}
+
+\tikzexternalenable
+\tikzsetnextfilename{ext-interactions}
+
+\begin{tikzpicture}
+\begin{groupplot}[%
+    group style={%
+        % group name=energy loss plots,
+        group size=2 by 2,
+        xlabels at=edge bottom,
+        ylabels at=edge left,
+        xticklabels at=edge bottom,
+    },
+    xmode=log, ymode=linear,
+    xlabel={$E/\si{\eV}$},
+    ylabel={$E^2\dd{N}/\dd{E}/$a.u.},
+    width=8.5cm,height=6.375cm,
+    cycle list={[of colormap=Dark2]},
+    grid=major,
+    % title style={at={(.5,0)},below,yshift=-1em}
+    title style={at={(0,1)},above,align=left,xshift=3em}
+]
+    \nextgroupplot[xmin=7e17,xmax=7e21,title={(a) H close~~}]
+        \PlotAllInteractions{H}{close}
+
+    \nextgroupplot[xmin=7e17,xmax=2e23,title={(b) \ce{^{56}Fe} close}]
+        \PlotAllInteractions{Fe56}{close}
+
+    \nextgroupplot[xmin=7e17,xmax=7e21,title={(c) H far~~~~}]
+        \PlotAllInteractions{H}{far}
+
+    \nextgroupplot[xmin=7e17,xmax=2e23,
+            title={(d) \ce{^{56}Fe} far~~},
+            legend to name={InteractionLegend},
+            legend style={legend columns=2,
+                /tikz/every even column/.append style={column sep=1.05cm}},
+            legend cell align=left,
+            legend transposed=true,
+        ]
+        \PlotAllInteractions{Fe56}{far}
+
+    \legend{%
+        free,Redshift,
+        PhotoPionCMB,PhotoPionIRB,
+        PhotoPairCMB,PhotoPairIRB,
+        % ElectronPairCMB,ElectronPairIRB,
+        PhotoDisCMB,PhotoDisIRB,
+    }
+
+\end{groupplot}
+
+    \path (group c1r2.south east) --
+        node[below,yshift=-1.2cm]{\ref*{InteractionLegend}}
+        (group c2r2.south west);
+
+\end{tikzpicture}
+
+\tikzexternaldisable
+
+% vim: set ff=unix tw=79 sw=4 ts=4 et ic ai :

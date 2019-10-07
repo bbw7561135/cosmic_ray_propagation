@@ -60,12 +60,8 @@ a flat energy distribution and once with a spectral index $\alpha=-2$ as
 expected from first-order Fermi acceleration, each time using \num{1000}
 particles.
 
-\emph{Note:} All following simulations will be performed with a spectral index
-$\alpha=-1$ and their results will be reweighted as needed.
-
 
 \subsection{Nuclear Interactions}
-\todo{remove photo-disint for protons}
 There are several extragalactic energy loss processes implemented in
 \CRPropa, whose characteristics are to be investigated for H and \Fe~nuclei on
 close (\SIrange{0}{10}{\mega\parsec}) and far
@@ -76,12 +72,15 @@ processes:
     \item without interaction
     \item Redshift
     \item Photo-Pion-Production
+    \item Photo-Pair-Production
     \item Photo-Disintegration
-    \item Electron-Pair-Production
 \end{itemize}
 where the last three processes are due to interactions with a given photon
 field (CMB, IRB). With \Fe, nuclear decay is considered additionally in all
 cases.
+For hydrogen, Photo-Disintegration is expected to not yield any energy loss, as
+there is no nucleus which can disintegrate into smaller nuclei, so it could
+have been omitted.
 
 The domain is 1D with uniformly distributed sources in the given distance
 interval.
@@ -117,8 +116,9 @@ ranging from \SIrange{1e17}{1e20}{\electronvolt}. Instead of a single
 point-like observer, six observer spheres arranged concentrically around the
 source with radii
 $r_{\mathrm{sphere}}=[\numlist[list-final-separator={,}]{.05;.5;1;5;50;100}]\times
-l_c$ are defined, which detect \todox{all fields?}coordinates, momentum and
-energy of leaving particles. The particles are not removed on detection and
+l_c$ are defined, which detect and record coordinates, momentum and
+energy of leaving particles (initially at the source and at the point of
+detection). The particles are not removed on detection and
 thus can re-enter the spheres (however, due to implementation details, only
 leaving particles are detected). Further a maximum trajectory length
 $d_{\mathrm{max}}=\num{5e3}\times l_c$ (\ie~two orders of magnitude larger than

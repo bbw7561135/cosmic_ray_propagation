@@ -27,9 +27,9 @@ were the logarithm of the energies is used. The differential candidate number
 $\dd{N}/\dd{E}$ can be approximated by dividing the number of particles for a
 given bin by its width $\dd{E_i}=10^{\log(E_{i+1})-\log(E_{i})}$, where $E_{i},
 E_{i+1}$ are the bin's edges; $\dd{N}/\dd{E}$ is plotted against the central
-energies of the bins $10^{\log(E_{i+1})}+10^{\log(E_{i})}$ in
+energies of the bins $\left(10^{\log(E_{i+1})}+10^{\log(E_{i})}\right)/2$ in
 loglog-representation. The uncertainties are computed according to Poisson
-statistics (\cref{eq:mc-std})
+statistics \cref{eq:mc-std}:
 \begin{equation*}
     \Delta{y}=\frac{\dd{N}/\dd{E}}{\sqrt{N}}
 \end{equation*}
@@ -40,32 +40,50 @@ This is done for the energy spectra with $\alphaflat=-1$ and
 $\alphafermi=-2$ and for the reweighted flat spectrum
 ($\alphaflat\to\alphafermi$, see \cref{eq:reweight}).
 
-\begin{figure}[ht]
+\input{tikz/reweighting-hist}
+\begin{figure}[b!]
+    \centering
     \begin{subfigure}[b]{.75\textwidth}
         \centering
-        % \input
-        \caption{Fermi spectrum}
+        \ReweightingAxis{-2.00}{None}{18.794}{21.54}{fermi}
+        % \includegraphics[width=\textwidth]{extern/ext-reweighting-fermi}
+        \caption{Fermi spectrum: direct simulation with $\alpha=-2$}
         \label{fig:rew-fermi}
+        % \vspace*{\baselineskip}
     \end{subfigure}
+\end{figure}
+\begin{figure}[b!]
+    \ContinuedFloat
+    \centering
     \begin{subfigure}[b]{.75\textwidth}
         \centering
-        % \input
-        \caption{flat spectrum}
+        \ReweightingAxis{-1.00}{None}{18.793}{21.795}{flat}
+        % \includegraphics[width=\textwidth]{extern/ext-reweighting-flat}
+        \caption{flat spectrum with $\alpha=-1$}
         \label{fig:rew-flat}
+        % \vspace*{\baselineskip}
     \end{subfigure}
+\end{figure}
+\begin{figure}[t!]
+    \ContinuedFloat
+    \centering
     \begin{subfigure}[b]{.75\textwidth}
         \centering
-        % \input
-        \caption{reweighted flat spectrum}
+        \ReweightingAxis{-1.00}{-2.00}{18.795}{21.793}{reweight}
+        % \includegraphics[width=\textwidth]{extern/ext-reweighting-reweight}
+        \caption{reweighted spectrum: simulated with $\alpha=-1$, then
+            reweighted to $\alpha=-2$}
         \label{fig:rew-rew}
     \end{subfigure}
-    \caption{Normalized plots}
+
+    \caption{Normalized histograms and differential energy spectra for
+    different spectral indices}
     \label{fig:rew}
 \end{figure}
 
 The histogram of the Fermi spectrum (see \cref{fig:rew-fermi}) clearly shows
 the predominance of particles at lower energies and an approx.~linear (in
-the loglog-representation, slope$\sim-1$) decrease of particle numbers with
+the loglog-representation, slope $\sim-1$) decrease of particle numbers with
 increasing energy. This is also reflected in the increasing uncertainties,
 which scale as $\Delta{y}\propto1/\sqrt{N}$.
 While the spectral curve behaves approx.~as expected from first-order Fermi
@@ -81,56 +99,387 @@ $w_{E_0}=E_0^{1-2}=E_0^{-1}$ to this distribution, one obtains a spectrum,
 which is in good agreement with the theory, while also maintaining the
 well-behaved uncertainties (\cref{fig:rew-rew}).
 
+Due to the absence of any interactions, one would expect the observed spectrum
+to be identical to the source spectrum, yet there are deviations in the fitted
+spectral index. This is due to statistical effects from the MC simulations;
+running these simulations multiple times would probably yield a normal
+distribution around the \enquote{true} values. However these statistical
+fluctuations are much more significant with the direct simulation (due to the
+reasons discussed above), which additionally speaks in favor for the
+reweighting.
+
 \emph{Note:} Due to the clear advantages of this technique, all following
 simulations will be performed with a flat spectrum and have their results
 reweighted to correspond to Fermi-theory.
 
-\todo{mention fluctuations when repeating simulations with unchanged
-parameters?}
-
 
 \subsection{Nuclear Interactions}
-\todo{remove photo-disint for protons}
 The influence of the individual interactions is analysed by looking at the
 differential candidate number $\dd{N}/\dd{E}$ times $E^2$. Then, with a
 log-scale on the x-axis, a power-law spectrum with $\alpha=-2$ appears as a
 horizontal line, which is convenient for identifying and discussing deviations
 from the expected curve.
+$\dd{N}/\dd{E}$ and the uncertainties are computed as described in
+\cref{sec:eval-rew} and $E$ describes the central bin values. The results
+are depicted in \cref{fig:interactions}.
 
-$\dd{N}/\dd{E}$ is computed as described in \cref{sec:eval-rew} and $E$
-describes the central bin values.
+\begin{figure}[ht!]
+    \centering
+    \input{tikz/interaction-plots}
+    % \includegraphics{extern/ext-interactions}
+    \caption{Normalized energy spectra $\dd{N}/\dd{E}\times{E^2}$ vs.~$E$ for
+        all cases}
+    \label{fig:interactions}
+\end{figure}
 
-When looking at the respective plots, one immediately recognizes the most
-important interactions for each setup:
+When looking at the respective plots, there are a few features to recognize:
 \begin{description}
     \item[H close]
-        \begin{itemize}
-            \item photo-pion-prod.~with CMB
-        \end{itemize}
+        All curves are nearly horizontal for $E<\SI{3e20}{\electronvolt}$
+        corresponding to an (unchanged) spectral index $\alpha\approx-2$,
+        \ie~no significant energy loss took place. Fluctuations are of
+        statistical nature.
+
+        At higher energies, \emph{Photo-Pion-Prod.~(CMB)} causes the
+        spectrum first to flatten before steeply falling down at
+        $E>\SI{1e21}{\electronvolt}$ (with $\alphafalling\approx-2.31$). The CR
+        flux is shifted to lower energies.
+
+        The cutoff appears at higher energies than the estimated
+        \SI{5e19}{\electronvolt}, which is no surprise here, because of the
+        close source distances \SIrange{0}{10}{\mega\parsec}.
+
     \item[H far]
-        \begin{itemize}
-            \item photo-pion-prod.~with CMB
-            \item electron-pair-prod.~with CMB
-        \end{itemize}
+        The peak of shifted flux due to \emph{Photo-Pion-Prod.~(CMB)} is formed
+        more sharply ($\alphafalling\approx-5.58$), with no
+        detected candidates beyond some maximum energy. However that maximum
+        value lies with $\sim\SI{5e20}{\electronvolt}$ significantly further
+        right than expected.
+
+        The curve of \emph{Photo-Pair-Prod.~(CMB)} shows a weaker but
+        noticeable decrease of flux without cutoff (with
+        $\alphafalling\approx-2.22$). While this behaviour is
+        qualitatively expected, the starting point of this effect lies with
+        $\sim\SI{2e19}{\electronvolt}$ also about one order of magnitude too
+        far right.
+
     \item[Fe close]
-        \begin{itemize}
-            \item photo-pion-prod.~with CMB
-            \item photo-disint.~with CMB
-        \end{itemize}
+        The cutoff due to \emph{Photo-Pion-Prod.~(CMB)} is also present (with
+        $\alphafalling\approx-2.96$) and
+        lies about two orders of magnitude further right compared to hydrogen,
+        which is a reasonable result, considering the higher number of
+        nucleons on which the total energy is distributed. In addition to
+        the peak of left-shifted flux immediately before the cutoff,
+        another peak in the spectrum seems to emerge in the region
+        \SIrange{1e20}{1e22}{\electronvolt}, which might be attributed to
+        secondary particles resulting from \emph{Nuclear Decay} after the
+        nucleus was converted to an unstable nuclide during
+        Photo-Pion-Prod.~(\eg~${\text{p}+\gamma\to\text{n}+\pi^0}$ yielding
+        \ce{^{56}Co} with a half-life of around 77 days; see also
+        \cref{tab:secondaries}).
+
+        This hypothesis could be supported by the curve of
+        \emph{Photo-Disint.~(CMB)}, which exhibits a rather steep spectrum
+        at $\sim\SI{5e21}{\electronvolt}$ resulting in a noticeable decrease
+        of flux at energies above that value (with
+        $\alphafalling\approx-2.89$). Additionally a very prominent peak is
+        apparent for lower energies. This flattening of the spectrum
+        is probably caused by secondaries and products of nuclear
+        decay with left-shifted energies.
+
     \item[Fe far]
-        \begin{itemize}
-            \item photo-pion-prod.~with CMB
-            \item photo-pion-prod.~with IRB
-            \item photo-disint.~with CMB
-            \item photo-disint.~with IRB
-            \item electron-pair-prod.~with CMB
-        \end{itemize}
+        The aforementioned weak second peak in the curve of
+        \emph{Photo-Pion-Prod.~(CMB)} is now present more distinctly
+        ($\alphafalling\approx-2.69$), while the first peak disappeared and the
+        cutoff remains only in form of non-existent detections beyond some
+        maximum energy, with the steep decline having completely disappeared.
+
+        \emph{Photo-Pion-Prod.~(IRB)} also shows a peak at a similar
+        location as with the CMB, followed by a slightly steeper spectrum,
+        compared to the initial Fermi spectrum ($\alphafalling\approx-2.12$).
+        No cutoff is apparent.
+
+        \emph{Photo-Disint.~(CMB)} now exhibits steep descent
+        ($\alphafalling\approx-3.40$) with a clear cutoff at
+        $\sim\SI{2e21}{\electronvolt}$, meaning all \Fe-nuclei with larger
+        energy have disintegrated or decayed into secondaries, causing the
+        strong left-shifted peak in the spectrum.
+
+        While \emph{Photo-Disint.~(IRB)} also shows a strong left-shifted
+        peak reflecting the production of secondaries, no cutoff is present
+        and the spectrum seems to return the initial spectral index after a
+        steeper decline with $\alphafalling\approx-2.45$.
+
+        When given sufficient propagation time (with longer distances),
+        energy decay due to \emph{Photo-Pair-Prod.~(CMB)} becomes also
+        noticeable for nuclei with energies greater than
+        $\SI{1e21}{\electronvolt}$, apparent from a decline of the spectrum
+        with $\alphafalling\approx-3.63$. Since this process does not change
+        the internal structure of the nuclei, no unstable products are produced
+        and thus no decay happens. This is reflected by a missing peak of
+        left-shifted flux in the spectrum.
+
 \end{description}
+
+In order to quantify the effects of the interaction mechanisms somewhat
+more thoroughly and to compare them with each other, one can estimate a
+\emph{loss time scale} by looking at the maximum energy loss and multiplying
+the square root of the ratio of the corresponding mass and that energy
+difference with some scale length:
+\begin{equation}
+    \tau\sim d_{\mathrm{scale}}\times\sqrt{\frac{m}{E_0-E_{\mathrm{final}}}}.
+\end{equation}
+This expresses the time during which the candidate experiences the given energy
+loss (the shorter the time, the more significant the respective mechanism). In
+order to obtain comparable results, for all distance regimes the same
+scale length $d_{\mathrm{scale}}=\SI{100}{\mega\parsec}$ was chosen (see
+\cref{tab:loss-time}).
+
+\begin{table}[ht]
+    \centering
+    \sisetup{table-parse-only,table-column-width=10ex}
+    \begin{tabular}{lSSSS}
+        \toprule
+        \multirow{2}{*}{Interaction}
+        & \multicolumn{2}{c}{H} & \multicolumn{2}{c}{\Fe} \\
+        \cmidrule{2-5}
+        & {close} & {far} & {close} & {far} \\
+        \midrule
+        Redshift            & 2748  & 293   & 4000  & 428   \\
+        Pion-Prod.~(CMB)    & 133   & 130   & 25    & 25    \\
+        Pion-Prod.~(IRB)    & 192   & 135   & 25    & 25    \\
+        Pair-Prod.~(CMB)    & 2494  & 221   & 861   & 185   \\
+        Pair-Prod.~(IRB)    & 89419 & 8964  & 33313 & 2920  \\
+        Photo-Disint.~(CMB) & {inf} & {inf} & 25    & 25    \\
+        Photo-Disint.~(IRB) & {inf} & {inf} & 29    & 26    \\
+        \bottomrule
+    \end{tabular}
+    \caption{Energy loss time scales for all cases in years}
+    \label{tab:loss-time}
+\end{table}
+
+\begin{description}
+    \item[Redshift]
+        Energy loss due to the cosmological redshift of the source of course
+        depends on the source's distance: for both candidate types the loss
+        time of the far regime is one order of magnitude smaller than that of
+        the close regime, which is reasonable.
+
+        Further, this mechanism is
+        independent of the particle's energy, and thus does not change the
+        spectral index.
+
+    \item[Pion-Production]
+        As a proton with sufficient energy is estimated to loss all of its energy
+        after $\sim\SI{30}{\mega\parsec}$, which is of the same order of
+        magnitude as the close distance regime, the similar loss times for both
+        distance regimes are reasonable.
+
+        Since $\tau\propto\sqrt{m}$, one might expect longer iron time scales,
+        however the opposite is the case. This could probably be attributed
+        to the higher number of nucleons, which can undergo this process and
+        additional nuclear decay of unstable secondaries (see also
+        \cref{tab:secondaries}).
+
+        While the IRB interaction is comparable to the CMB interaction in all
+        cases, it is more significant for hydrogen on larger distances. This
+        might be due to a lower photon density and a therewith smaller cross
+        section. This is again compensated by iron's higher nucleon number.
+
+    \item[Pair-Production]
+        As expected from the smaller fractional energy loss and as already seen
+        in \cref{fig:interactions}, pair production makes itself noticeable not
+        until larger distances.
+
+        While comparable on the large distance regime, the shorter time scale
+        for iron on the close regime might again be explained by its higher cross
+        section.
+
+        While for both candidate types the time scales in interaction with the
+        IRB are rather large (and thus less significant), their difference is
+        probably also due to the lower photon density and iron's higher cross
+        section.
+
+    \item[Photo-Disintegration]
+        The infinite time scales for hydrogen show that no energy loss
+        occurred, since there is no nucleus which can disintegrate into smaller
+        nuclei (as expected from theory; this simulation could have been
+        omitted).
+
+        The values for iron are comparable to energy loss due to
+        pion-production and thus belong to the more significant processes (as
+        already seen in \cref{fig:interactions}). Interaction with IRB takes
+        slightly longer on close distances.
+\end{description}
+
+\begin{table}[p]
+    \centering
+    \newcolumntype{E}{>{\zzz}l<{\relax}@{}}
+    \def\zzz#1\relax{\ce{#1}}
+    \begin{tabular}{lESES}
+        \toprule
+        \multirow{2}{*}{Interaction}
+        & \multicolumn{2}{c}{close} & \multicolumn{2}{c}{far} \\
+        \cmidrule{2-5}
+        & {Product} & {~Abundance/\%} & {Product} & {~Abundance/\%} \\
+        \midrule
+%
+        \multirow{3}{*}{\shortstack[l]{%
+            Pion-Prod.~(CMB)\\
+            \footnotesize
+            close: 16.43\% decayed \\
+            \footnotesize
+            far: 23.03\% decayed
+        }}
+        & ^1H & 79.38       & ^1H & 99.37 \\
+        & {n} & 15.38         & {traces} & 0.63 \\
+        & {traces} & 5.24   & & \\
+        \cmidrule{1-5}
+%
+        \multirow{7}{*}{\shortstack[l]{%
+            Pion-Prod.~(IRB) \\
+            \footnotesize
+            close: 3.03\% decayed \\
+            \footnotesize
+            far: 42.16\% decayed
+        }}
+        & ^1H & 48.49       & ^1H & 90.86 \\
+        & ^{55}Fe^* & 23.05   & {traces} & 9.14 \\
+        & ^{55}Mn & 21.46   & & \\
+        & {n} & 3.34          & & \\
+        & ^{54}Mn^* & 2.23    & & \\
+        & ^{54}Fe & 1.11    & & \\
+        & {traces} & 0.32   & & \\
+        \cmidrule{1-5}
+%
+        \multirow{5}{*}{\shortstack[l]{%
+            Photo-Disint.~(CMB) \\
+            \footnotesize
+            close: 39.35\% decayed \\
+            \footnotesize
+            far: 44.86\% decayed
+        }}
+        & ^1H & 87.73       & ^1H & 99.01 \\
+        & {n} & 5.88          & {traces} & 0.99 \\
+        & ^4He & 2.12       & & \\
+        & ^3He & 1.89       & & \\
+        & {traces} & 2.38   & & \\
+        \cmidrule{1-5}
+%
+        \multirow{9}{*}{\shortstack[l]{%
+            Photo-Disint.~(IRB) \\
+            \footnotesize
+            close: 6.28\% decayed \\
+            \footnotesize
+            far: 59.02\% decayed
+        }}
+        & ^1H & 62.67       & ^1H & 89.17 \\
+        & ^{55}Fe^* & 16.36   & ^4He & 3.02 \\
+        & ^{54}Fe & 4.89    & ^3He & 1.82 \\
+        & ^{53}Mn^* & 3.58    & {traces} & 6.00 \\
+        & ^{55}Mn & 3.52    & & \\
+        & ^{54}Mn^* & 3.07    & & \\
+        & ^{52}Cr & 1.76    & & \\
+        & {n} & 1.02        & & \\
+        & {traces} & 3.13   & & \\
+        \bottomrule
+    \end{tabular}
+    \caption[Secondaries of \Fe]{%
+    \textbf{Secondaries of \Fe:}
+    The decay of an iron nucleus may be triggered by Photo-Pion-Production and
+    Photo-Disintegration.
+
+    For each simulation \num{10000} candidates were propagated, of which the
+    specified percentage decayed. The isotope designations of the decay
+    products were determined from the recorded candidate IDs and their
+    composition is listed here. Radioactive isotopes are indicated by an
+    asterisk.
+
+    Note the absence of neutrons in the far regime: this is due to free
+    neutrons being unstable with a half life of \SI{881.5(15)}{\second}.}
+    \label{tab:secondaries}
+\end{table}
 
 
 
 \subsection{Magnetic Deflection}
-\todo{compute and compare rigidities $\rho=r_L/l_c, r_L=E/ZeBc$}
+\todo{%
+compute and compare rigidities $\rho=r_L/l_c, r_L=E/ZeBc$
+
+plot cr spectrum $\dd{N}/\dd{\rho}, \rho=\Lamor/l_c$
+
+mean and std of deflection (note: only leaving particles are detected)
+
+mean and std of trajectory length
+
+incl.~distributions for above two
+
+effect of B on the energy spectrum
+
+changes of mean deflection based on B, d (upper limit?)
+
+changes of mean trajectory based on B, d (physics based upper limit? -> c, age
+of the universe)
+
+in what range can a UHECR source produce an isotropic distribution at the
+earth?
+}
+
+\begin{table}
+    \centering
+    \begin{tabular}{SSSSS}
+        \toprule
+        {\multirow{2}{*}{\Robserver/\si{\mega\parsec}}} &
+        {\multirow{2}{*}{\Brms/\si{\nano\gauss}}} &
+        \multicolumn{3}{c}{Measurements} \\
+        \cmidrule{3-5}
+        & & {\alphafalling} & {\traj/\si{\mega\parsec}} & {\ablenkung/\si{\degree}}
+        \\
+        \midrule
+        {\multirow{4}{*}{\num{24e-3}}}
+        & 1     & -2.00 & 0.03(26)      & 0.49(161)     \\
+        & 10    & -2.04 & 0.17(619)     & 08.16(1845)   \\
+        & 20    & -3.07 & 0.23(420)     & 20.46(3242)   \\
+        & 50    & -3.08 & 00.88(3366)   & 48.93(4602)   \\
+        \cmidrule{1-5}
+%
+        {\multirow{4}{*}{\num{.24}}}
+        & 1     & -2.22 & 01.70(5405)   & 10.24(2037)   \\
+        & 10    & -2.31 & 019.75(16619) & 49.20(4726)   \\
+        & 20    & -2.29 & 026.88(21741) & 59.24(4756)   \\
+        & 50    & -2.35 & 040.78(21228) & 73.38(4535)   \\
+        \cmidrule{1-5}
+%
+        {\multirow{4}{*}{\num{.48}}}
+        & 1     & -2.47 & 006.89(10490) & 20.44(3270)   \\
+        & 10    & -2.38 & 055.17(29546) & 63.12(4727)   \\
+        & 20    & -2.39 & 071.12(31868) & 72.39(4562)   \\
+        & 50    & -2.40 & 128.14(46309) & 82.15(4249)   \\
+        \cmidrule{1-5}
+%
+        {\multirow{4}{*}{\num{2.4}}}
+        & 1     & -3.03 & 106.87(41466) & 50.54(4807)   \\
+        & 10    & -2.99 & 362.74(71616) & 83.49(4188)   \\
+        & 20    & -3.00 & 419.58(77142) & 86.59(4094)   \\
+        & 50    & -2.97 & 526.08(86515) & 88.17(3956)   \\
+        \cmidrule{1-5}
+%
+        {\multirow{4}{*}{\num{24}}}
+        & 1     & -3.30 & 1361.81(125738) & 80.35(4461) \\
+        & 10    & -3.35 & 2378.69(130089) & 88.25(3975) \\
+        & 20    & -3.35 & 2527.83(127112) & 89.70(3929) \\
+        & 50    & -3.29 & 2669.64(127207) & 89.65(3924) \\
+        \cmidrule{1-5}
+%
+        {\multirow{4}{*}{\num{48}}}
+        & 1     & -3.23 & 2006.20(145893) & 80.25(4411) \\
+        & 10    & -3.18 & 2646.78(141007) & 86.68(3996) \\
+        & 20    & -3.22 & 2709.92(140225) & 88.53(3928) \\
+        & 50    & -3.37 & 2726.14(135104) & 89.52(3906) \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
 
 
 \subsection{Constraints on the Sources}

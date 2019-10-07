@@ -5,8 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.constants as sc
 import scipy.odr as odr
-from scipy.stats import linregress
-from scipy.optimize import curve_fit
 from collections import OrderedDict
 from crpropa import *
 
@@ -25,7 +23,7 @@ OBSERVER_RADIUS = 25 * kpc
 OBSERVER_AREA = 4. * np.pi * OBSERVER_RADIUS**2
 
 A, Z = 1, 1
-EMIN, EMAX = 1e18*eV, 1e21*eV
+EMIN, EMAX = 1e17*eV, 1e21*eV
 LMIN, LMAX = 150*kpc, 2000*kpc
 SPECTRAL_INDEX_BFIELD = -11/3
 SPECTRAL_INDEX_FERMI = -2.
@@ -38,7 +36,6 @@ L_c = turbulentCorrelationLength(LMIN, LMAX, SPECTRAL_INDEX_BFIELD)
 RADII = L_c * np.array([.05, .5, 1., 5., 50., 100.])
 # RADII = L_c * np.array([5., 50., 100.])
 DMAX = RADII[-1] * 1e2
-DC = 13.8e9 * 60 * 60 * 24 * 365.25 * sc.c / Mpc
 
 INTERACTIONS = [
     Redshift(),
@@ -53,7 +50,6 @@ INTERACTIONS = [
 
 def run(B_rms):
     vgrid = VectorGrid(Vector3d(0), 256, 75*kpc)
-    vgrid.setReflective(True)
     initTurbulence(vgrid, B_rms, LMIN, LMAX, SPECTRAL_INDEX_BFIELD, SEED)
     Bfield = MagneticFieldGrid(vgrid)
 

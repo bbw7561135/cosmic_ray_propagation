@@ -1,0 +1,83 @@
+% \def\width{12.75cm}
+% \def\height{9.56cm}
+\def\width{7.65cm}
+\def\height{5.74cm}
+\def\binymin{3*10^-3}
+\def\binymax{3}
+\def\errymin{6*10^-25}
+\def\errymax{6*10^-19}
+
+
+\newcommand{\ReweightingAxis}[5]{%
+
+\tikzexternalenable
+\tikzsetnextfilename{ext-reweighting-#5}
+
+\begin{tikzpicture}
+    \pgfplotsset{set layers}
+
+\begin{axis}[%
+    width=\width, height=\height,
+    scale only axis,
+    axis y line*=left,
+    axis x line=none,
+    xmin={#3}, xmax={#4},
+    ymin=\binymin, ymax=\binymax,
+    ylabel={normalized number of events},
+    ymode=log,
+]
+    \addplot [%
+        ybar interval,
+        ultra thin,
+        fill=Paired-B,
+        draw=Paired-B!20!white,
+    ] table [x=bins,y=N]
+        {reweighting-hist-alpha-#1-alpha_new-#2.csv};
+
+\end{axis}
+
+\begin{axis}[%
+    width=\width, height=\height,
+    scale only axis,
+    axis y line*=right,
+    xmin={#3}, xmax={#4},
+    ymin=\errymin, ymax=\errymax,
+    xlabel={$\log(E/\si{\eV})$},
+    ylabel={$\dd{N}/\dd{E}/$a.u.},
+    xtick distance=.5,
+    grid=major,
+    ymode=log,
+    log basis y=10,
+]
+    \addplot [%
+        draw=none,
+        fill=none,
+    ] table [%
+        y={create col/linear regression={x=dE,y=dNdE}}
+    ]
+        {reweighting-errbar-alpha-#1-alpha_new-#2.csv};
+
+    \addplot [%
+        Paired-H,
+        ultra thick,
+        domain=18:22,
+    ] {10^(\pgfplotstableregressiona*x+\pgfplotstableregressionb)};
+
+    \addplot [%
+        draw=none,
+        error bars/.cd,
+            y dir=both,y explicit,
+            error bar style={ultra thick,color=black},
+    ] table [x=dE,y=dNdE,y error=yerr]
+        {reweighting-errbar-alpha-#1-alpha_new-#2.csv};
+
+    \legend{,$\alpha_{\mathrm{fit}}=\pgfmathprintnumber{\pgfplotstableregressiona}$}
+\end{axis}
+\end{tikzpicture}
+
+\tikzexternaldisable
+
+}
+
+
+% vim: set ff=unix tw=79 sw=4 ts=4 et ic ai :

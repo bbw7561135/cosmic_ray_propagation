@@ -65,16 +65,12 @@ lower than the Planck energy $E_{\mathrm{P}}=\SI{1.2209e28}{\electronvolt}$)?
 
 The isotropic distribution of arrival directions for particles with energies
 $\ge\SI{1e16}{\electronvolt}$ suggests extra-galactic origins. This claim can
-be supported by estimating the Lamor-radius of UHECRs in the interstellar
-magnetic field:
-\begin{equation}
-    \Lamor=\frac{\gamma m v \sin\pitch}{ZeB}
-    =\frac{pc}{Ze}\frac{\sin\pitch}{Bc}
-    =\frac{R\sin\theta_{\mathrm{pitch}}}{Bc},
+be supported by estimating the Lamor-radius of UHECRs (in the
+ultra-relativistic limit with $E\approx pc$) in the interstellar magnetic
+field: \begin{equation}
+    \Lamor=\frac{p}{ZeB}=\frac{E}{ZeBc}
 \end{equation}
-where $R=pc/Ze$ is the particle's rigidity in volts, which is the same as the
-particle's energy in electron-volts in the ultra-relativistic regime. With
-a representative average galactic magnetic field strength of
+With a representative average galactic magnetic field strength of
 $\SI{10}{\micro\gauss}$, one finds the values listed in \cref{tab:Lamor}.
 Looking at these values, one finds that they are comparable to the estimated
 half-thickness of the milky way's stellar disk of \SI{300}{\parsec} and its
@@ -87,7 +83,7 @@ escape the galaxy's magnetic field.
     \sisetup{table-parse-only}
     \begin{tabular}{SSS}
         \toprule
-        {$R/\si{\volt}$} & {$\Lamor/\si{\parsec}$ of a Proton} &
+        {$E/\si{\eV}$} & {$\Lamor/\si{\parsec}$ of a Proton} &
         {$\Lamor/\si{\parsec}$ of a \ce{^{56}Fe} nucleus} \\
         \midrule
         1e15 & .108 & 4.16e-3 \\
@@ -173,7 +169,7 @@ acceleration are taken under closer consideration.
 
 
 \subsubsection{\nth{2} order Fermi acceleration}
-At first encounters of an ultra-relativistic ($E\approx pc$) test particle with
+At first encounters of an ultra-relativistic test particle with
 a moving cloud of plasma is discussed, where \emph{encounter} means entering
 and exiting the cloud (see \cref{fig:fermi2}).
 
@@ -449,9 +445,8 @@ isotropic turbulent flow, Kolmogorov turbulence and $\lmin\ll\lmax$ one has:
 \end{equation}
 
 A useful quantity to classify the relation of the particle with the magnetic
-field is the dimensionless rigidity $r=\Lamor/l_c$ (not to be confused with the
-rigidity in volts $R=pc/Ze$ discussed above), where $\Lamor=E/Ze\Brms c$ is the
-particle's Lamor-radius in the ultra-relativistic limit (\ie~$E\approx pc$).
+field is the dimensionless rigidity $\rho=\Lamor/l_c$, where $\Lamor=E/Ze\Brms
+c$ is the particle's Lamor-radius in the ultra-relativistic limit.
 
 Now, the particle undergoes resonant scattering if $k\cos\pitch=1/\Lamor$:
 \begin{itemize}
