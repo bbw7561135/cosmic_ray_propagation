@@ -9,11 +9,14 @@ from scipy.stats import linregress
 from scipy.optimize import curve_fit
 from crpropa import *
 
+plt.rcParams['axes.grid'] = True
+
 
 SEED = 100
 NSIM = 10000
 
-OUTFILENAME = 'output/constraints_brms-%.0e_r-%.0e_high-energy.txt'
+# OUTFILENAME = 'output/constraints_brms-%.0e_r-%.0e_high-energy.txt'
+OUTFILENAME = 'output/constraints_brms-%.0e_r-%.0e.txt'
 LABEL = r'$B_{rms}=%.0e$, $r=%.0e$'
 
 OBSERVER_RADIUS = 25 * kpc
@@ -27,9 +30,11 @@ SPECTRAL_INDEX_FERMI = -2.
 SPECTRAL_INDEX_FLAT = -1
 CENTER = np.array([128, 128, 128]) * 75*kpc
 B_RMS = np.array([50, 20, 10, 1]) * nG
+# B_RMS = np.array([50, 20, 10]) * nG
 
 L_c = turbulentCorrelationLength(LMIN, LMAX, SPECTRAL_INDEX_BFIELD)
- RADII = L_c * np.array([.05, .5, 1., 5., 50., 100.])
+RADII = L_c * np.array([.05, .5, 1., 5., 50., 100.])
+# RADII = L_c * np.array([5., 50., 100.])
 DMAX = RADII[-1] * 1e2
 DC = 13.8e9 * 60 * 60 * 24 * 365.25 * sc.c / Mpc
 
@@ -93,7 +98,7 @@ def compute_spectral_index(dE, dF, xerr, yerr):
     return out.beta[0], np.sqrt(np.diag(out.cov_beta))[0]
 
 
-def plot_spectrum(B_rms, radius, alpha0=SPECTRAL_INDEX_FERMI):
+def plot_spectrum(B_rms, radius, axes, alpha0=SPECTRAL_INDEX_FERMI):
     def dot(x, y):
         return np.sum(x * y, axis=0)
     def norm(x):
@@ -106,7 +111,7 @@ def plot_spectrum(B_rms, radius, alpha0=SPECTRAL_INDEX_FERMI):
             - np.array([data['X0'], data['Y0'], data['Z0']])
     p = np.array([data['Px'], data['Py'], data['Pz']])
     theta = np.arccos(dot(r, p) / (norm(r) * norm(p)))
-    print(np.rad2deg(theta.max()))
+    # print(np.rad2deg(theta.max()))
 
     weights = E0**(-SPECTRAL_INDEX_FLAT + alpha0) \
             * 1. / np.abs(np.cos(theta)) * 1. / np.sin(theta)
@@ -117,38 +122,47 @@ def plot_spectrum(B_rms, radius, alpha0=SPECTRAL_INDEX_FERMI):
     dF = N * radius**2 / OBSERVER_AREA**2
     yerr = dF / np.sqrt(N_noweights)
 
-    alpha, alpha_std = compute_spectral_index(dE / eV, dF,
-                                              bins[1:]-bins[:-1], yerr)
-    domain = (E/eV > 5e18) & (E/eV < 3e19)
-    theta_ = np.rad2deg(theta[domain])
+    # alpha, alpha_std = compute_spectral_index(dE / eV, dF,
+    #                                           bins[1:]-bins[:-1], yerr)
+    # domain = (E/eV > 5e18) & (E/eV < 3e19)
+    # theta_ = np.rad2deg(theta[domain])
 
-    th_mean, th_std = theta_.mean(), theta_.std()
-    d_mean, d_std = d.mean(), d.std()
+    # th_mean, th_std = theta_.mean(), theta_.std()
+    # d_mean, d_std = d.mean(), d.std()
 
     # if ((alpha-alpha_std) < 2.5 < (alpha+alpha_std)) \
     #         and ((th_mean-th_std) < 45. < (th_mean+th_std)):
-    print('B_rms = %.0f nG\tR = %.0f kpc:\talpha = (%.3f +- %.3f)'
-              '\tdefl = (%.2f +- %.2f) Degree\ttraj = (%.2f +- %.2f) Mpc'
-              % (B_rms / nG, radius / kpc, alpha, alpha_std,
-                 th_mean, th_std, d_mean, d_std))
-        # if d_mean + d_std > DC:
-        #     print('\t[WARN] trajectory larger than age of universe!')
+    # print('B_rms = %.0f nG\tR = %.0f kpc:\talpha = (%.3f +- %.3f)'
+    #           '\tdefl = (%.2f +- %.2f) Degree\ttraj = (%.2f +- %.2f) Mpc'
+    #           % (B_rms / nG, radius / kpc, alpha, alpha_std,
+    #              th_mean, th_std, d_mean, d_std))
 
-    plt.errorbar(dE / eV, dF, yerr, # label=LABEL % (B_rms, radius))
-                 label=r'$\alpha$ = (%.3f $\pm$ %.3f)' % (alpha, alpha_std))
+    axes[0].errorbar(dE / eV, dE**2.5*dF, dE**2.5*yerr,
+    # axes[0].errorbar(dE / eV, dF, yerr,
+            label='Brms=%.0f nG' % (B_rms/nG))
+    # axes[1].hist(np.log10(d), bins=50, density=True, histtype='step',
+    #         label='Brms=%.0e nG' % (B_rms/nG))
+    # axes[2].hist(np.rad2deg(theta), bins=50, density=True, histtype='step',
+    #         label='Brms=%.0e nG' % (B_rms/nG))
 
 
 def plot_spectra(alpha0=SPECTRAL_INDEX_FERMI):
-    plt.figure()
-    ax_idx = 221
-    for b in B_RMS:
+    spec_fig, _ = plt.subplots(1, 3)
+    # traj_fig, _ = plt.subplots(2, 3)
+    # defl_fig, _ = plt.subplots(2, 3)
+
+    for i, r in enumerate(RADII[:]):
         # print('\nB_rms = %.0f nG' % (b / nG))
-        plt.subplot(ax_idx)
-        plt.loglog(nonposx='clip', nonposy='clip')
-        ax_idx += 1
-        for r in RADII:
-            plot_spectrum(b, r, alpha0)
-        plt.legend()
+        # axes = [spec_fig.axes[i], traj_fig.axes[i], defl_fig.axes[i]]
+        axes = [spec_fig.axes[i]]
+        for ax in axes:
+            ax.set_title('R = %.2f Mpc' % (r / Mpc))
+        axes[0].loglog()
+        # axes[1].semilogy()
+        # axes[2].semilogy()
+        for b in B_RMS:
+            plot_spectrum(b, r, axes, alpha0)
+    plt.legend()
 
 
 # for b in B_RMS:
@@ -156,8 +170,13 @@ def plot_spectra(alpha0=SPECTRAL_INDEX_FERMI):
 # for alpha0 in -np.arange(1.5, 2.6, .1):
 #     print('\n\nenergy spectral index = %.1f' % alpha0)
 #     plot_spectra(alpha0)
-if __name__ == '__main__':
-    plot_spectra()
+# if __name__ == '__main__':
+#     for a in -np.arange(2.0, 2.6, .1):
+#         print('processing alpha = %.1f ...' % a)
+#         plot_spectra(a)
+#         plt.gcf().suptitle('alpha = %.1f' % a)
+
+plot_spectra()
 
 
 #  vim: set ff=unix tw=79 sw=4 ts=8 et ic ai :
