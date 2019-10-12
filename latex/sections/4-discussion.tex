@@ -19,10 +19,12 @@ consistently accurate results, by not wasting CPU time due to unevenly sampling
 the available energies.
 
 \subsection{Nuclear Interactions}
+\label{sec:dis-int}
 The estimated changes in the spectral indices due to the different interaction
 mechanisms are qualitatively as expected from theory and show that an initial
 Fermi spectrum can be changed into something closer to the observations.
-However the thresholds at which certain features emerge are throughout about
+However the thresholds at which certain features (such as the GZK-cutoff due to
+Photo-Pion-Production) emerge are throughout about
 one magnitude in energy too large.  With the steering scripts appearing
 correct, the suspicion of an off-by-one error in the \CRPropa~source is
 aroused.
@@ -93,6 +95,48 @@ context:
 
 
 \subsection{Constraints on the Sources}
+The parameter combinations, which were obtained during this investigation and
+which best fit the observational constraints
+$\CRFlux(\inrange{E}{5}{30}{\exa\eV})\propto{E^{-2.5}}$ with high isotropy are
+listed in \cref{tab:best-constraints}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{SSSSSS[table-figures-uncertainty=1,table-number-alignment=center]}
+        \toprule
+        {\alphasource} & {$\Robserver/\si{\mega\parsec}$} &
+        {$\Brms/\si{\nano\gauss}$} & {$\Emin/\si{\exa\eV}$} &
+        {$\Emax/\si{\exa\eV}$} & {\alphafalling} \\
+        \midrule
+        2 & 24 & 1 & 2 & 10 & 2.55(6) \\
+        2.6 & 2.4 & 10 & 3 & 40 & 2.54(2) \\
+        \bottomrule
+    \end{tabular}
+    \caption{Best fitting parameter combinations}
+    \label{tab:best-constraints}
+\end{table}
+
+However note, that several other well fitting combinations can be found by more
+thoroughly fine-tuning the relevant parameters of the simulation (\alphasource,
+\Robserver, \Brms). Further, investigating the spectra for other candidate
+types (\eg~iron nuclei, mixed source) could yield some more interesting
+possibilities.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.5\textwidth]{auger-spectrum}
+    \caption{UHECR spectrum measured by the Auger observatory with a broken
+    power law fit and suppression at high energies. Source\autocite{augerICRC2017}}
+    \label{fig:auger-spectrum}
+\end{figure}
+
+When comparing the resulting spectra with the observations of the Auger
+observatory (see \cref{fig:auger-spectrum}), is is immediately obvious that the
+behaviour outside of the vicinity of the ankle does not match the expected
+stronger decline with ${\alpha}>3$. In fact the opposite is the case: the
+spectra are much more shallow with $0<{\alpha}<2$.
+For high energies this might be related to the GZK-cutoff being shifted too far
+to the right (as discussed in \cref{sec:dis-int}).
 
 
 % vim: set ff=unix tw=79 sw=4 ts=4 et ic ai :

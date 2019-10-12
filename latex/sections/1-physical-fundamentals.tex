@@ -57,11 +57,12 @@ This experiment is concerned with investigating the propagation of UHECR
 
 \section{Physical Fundamentals}
 \subsection{Origin of UHECRs}
-Which phenomenon is in principle able to accelerate particles to such large energies
-(for reference: a particle with $E=\SI{3e20}{\electronvolt}$ has 23 million
+Which phenomenon is in principle able to accelerate particles to such large
+energies?
+(For reference: a particle with $E=\SI{3e20}{\electronvolt}$ has 23 million
 times the LHC's collision energy of
 $E_{\mathrm{LHC}}=\SI{13e12}{\electronvolt}$, but is still 40 million times
-lower than the Planck energy $E_{\mathrm{P}}=\SI{1.2209e28}{\electronvolt}$)?
+lower than the Planck energy $E_{\mathrm{P}}=\SI{1.2209e28}{\electronvolt}$).
 
 The isotropic distribution of arrival directions for particles with energies
 $\ge\SI{1e16}{\electronvolt}$ suggests extra-galactic origins. This claim can
@@ -205,7 +206,7 @@ where $\theta_2'$ is the angle between the particle's and the cloud's velocity
 at exit.
 
 Now with the difference of \cref{eq:fermi2-e1p,eq:fermi2-e2} the energy change
-can be computed:
+can be found:
 \begin{align*}
     \frac{\Delta{E}}{E_1}
     &=\frac{\gamma{E_2'}(1+\beta\cos\theta_2')-\frac{E_1'}{\gamma(1-\beta\cos\theta_1)}}{\frac{E_1'}{\gamma(1-\beta\cos\theta_1)}}
@@ -422,7 +423,7 @@ into account -- putting observational constrains on the field strength
 of extra-galactic magnetic fields is rather difficult.
 
 For simplicity in this experiment a uniform isotropic turbulent field is
-assumed, which is characterized by the root mean squared strength
+assumed, which is characterized by the root mean squared field strength
 $\Brms=\sqrt{\langle{B^2(x)}\rangle}$ and the distribution of magnetic energy
 $w$, which -- according to Kolmogorov theory -- follows a power-law in Fourier
 space between the maximum and minimum wave-numbers \kmin~and \kmax, which
@@ -469,7 +470,7 @@ diffusive is given by:
 
 
 \subsection{Propagation of UHECRs}
-\subsubsection{CRPropa3}
+\subsubsection*{CRPropa3}
 The propagation of cosmic rays can be obtained by solving either the
 Fokker-Planck equation for a distribution of many particles
 or the equation of motion according to the Lorentz force for a single particle.
@@ -488,7 +489,7 @@ statistical fluctuations) this needs to be repeated for a large number of
 particles.
 
 
-\subsubsection{The Monte-Carlo method}
+\subsubsection*{The Monte-Carlo method}
 The basic idea behind the Monte-Carlo approach is to repeatedly perform an
 experiment -- which is subject to random fluctuations (\eg~initial
 conditions) -- a large amount of times and average the results. When
@@ -562,7 +563,7 @@ The variance of the expected value $\lambda_n$ is then
 \end{equation}
 where the Bienaymé relation
 \begin{equation*}
-    \Var\left(\sum_{i=1}^{n}Y_i\right)=\sum_{i=1}^{n}Y_i
+    \Var\left(\sum_{i=1}^{n}Y_i\right)=\sum_{i=1}^{n}\Var(Y_i)
 \end{equation*}
 and the property
 \begin{equation*}
@@ -581,7 +582,7 @@ becomes
 difference between one run with $n$ events and $n$ runs with one event each.
 
 
-\subsubsection{Reweighting}
+\subsubsection*{Reweighting}
 A common technique used in experiments and MC simulations is the reweighting of
 an initial distribution.
 

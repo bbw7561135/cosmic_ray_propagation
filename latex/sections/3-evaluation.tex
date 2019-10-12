@@ -7,7 +7,7 @@ The exact value of the unit circle's surface area is
     \label{eq:circle-area-exact}
 \end{equation}
 While results of single MC runs may deviate rather noticeably,
-plotting the histogram of all MC runs reveals a uniform distribution
+plotting the histogram of all MC runs reveals a normal distribution
 centered around the exact value as expected from the central
 limit theorem (see \cref{fig:circle-area-hist}).
 
@@ -15,8 +15,7 @@ limit theorem (see \cref{fig:circle-area-hist}).
     \centering
     \includegraphics[width=.75\textwidth]{circle-area-dist}
     \caption{Histogram of \num{1000} MC runs with mean and standard
-    deviation \num{3.141(17)}. Notice the corresponding normal
-distribution.}
+    deviation \num{3.141(17)}}
     \label{fig:circle-area-hist}
 \end{figure}
 
@@ -36,43 +35,43 @@ statistics \cref{eq:mc-std}:
 were $N$ refers to the \emph{unweighted} and \emph{not normalized} number of
 candidates per bin.
 
-This is done for the energy spectra with $\alphaflat=-1$ and
-$\alphafermi=-2$ and for the reweighted flat spectrum
+This is done for the energy spectra with $\alphaflat=1$ and
+$\alphafermi=2$ and for the reweighted flat spectrum
 ($\alphaflat\to\alphafermi$, see \cref{eq:reweight}).
 
 \input{tikz/reweighting-hist}
-\begin{figure}[b!]
+\begin{figure}[t!]
     \centering
     \begin{subfigure}[t]{.5\textwidth}
         \centering
         \ReweightingAxis{-2.00}{None}{18.794}{21.54}{fermi}
         % \includegraphics[width=\textwidth]{extern/ext-reweighting-fermi}
-        \caption{Fermi spectrum: direct simulation with $\alpha=-2$}
+        \caption{Fermi spectrum: direct simulation with $\alpha=2$}
         \label{fig:rew-fermi}
-        % \vspace*{\baselineskip}
+        \vspace*{\baselineskip}
     \end{subfigure}
-\end{figure}
-\begin{figure}[b!]
-    \ContinuedFloat
-    \centering
+% \end{figure}
+% \begin{figure}[b!]
+%     \ContinuedFloat
+%     \centering
     \begin{subfigure}[t]{.5\textwidth}
         \centering
         \ReweightingAxis{-1.00}{None}{18.793}{21.795}{flat}
         % \includegraphics[width=\textwidth]{extern/ext-reweighting-flat}
-        \caption{flat spectrum with $\alpha=-1$}
+        \caption{flat spectrum with $\alpha=1$}
         \label{fig:rew-flat}
-        % \vspace*{\baselineskip}
+        \vspace*{\baselineskip}
     \end{subfigure}
-\end{figure}
-\begin{figure}[t!]
-    \ContinuedFloat
-    \centering
+% \end{figure}
+% \begin{figure}[t!]
+%     \ContinuedFloat
+%     \centering
     \begin{subfigure}[t]{.5\textwidth}
         \centering
         \ReweightingAxis{-1.00}{-2.00}{18.795}{21.793}{reweight}
         % \includegraphics[width=\textwidth]{extern/ext-reweighting-reweight}
-        \caption{reweighted spectrum: simulated with $\alpha=-1$, then
-            reweighted to $\alpha=-2$}
+        \caption{reweighted spectrum: simulated with $\alpha=1$, then
+            reweighted to $\alpha=2$}
         \label{fig:rew-rew}
     \end{subfigure}
 
@@ -116,7 +115,7 @@ reweighted to correspond to Fermi-theory.
 \subsection{Nuclear Interactions}
 The influence of the individual interactions is analysed by looking at the
 differential candidate number $\dd{N}/\dd{E}$ times $E^2$. Then, with a
-log-scale on the x-axis, a power-law spectrum with $\alpha=-2$ appears as a
+log-scale on the x-axis, a power-law spectrum with $\alpha=2$ appears as a
 horizontal line, which is convenient for identifying and discussing deviations
 from the expected curve.
 $\dd{N}/\dd{E}$ and the uncertainties are computed as described in
@@ -135,13 +134,13 @@ When looking at the respective plots, there are a few features to recognize:
 \begin{description}
     \item[H close]
         All curves are nearly horizontal for $E<\SI{3e20}{\electronvolt}$
-        corresponding to an (unchanged) spectral index $\alpha\approx-2$,
+        corresponding to an (unchanged) spectral index $\alpha\approx2$,
         \ie~no significant energy loss took place. Fluctuations are of
         statistical nature.
 
         At higher energies, \emph{Photo-Pion-Prod.~(CMB)} causes the
         spectrum first to flatten before steeply falling down at
-        $E>\SI{1e21}{\electronvolt}$ (with $\alphafalling\approx-2.31$). The CR
+        $E>\SI{1e21}{\electronvolt}$ (with $\alphafalling\approx2.31$). The CR
         flux is shifted to lower energies.
 
         The cutoff appears at higher energies than the estimated
@@ -150,21 +149,21 @@ When looking at the respective plots, there are a few features to recognize:
 
     \item[H far]
         The peak of shifted flux due to \emph{Photo-Pion-Prod.~(CMB)} is formed
-        more sharply ($\alphafalling\approx-5.58$), with no
+        more sharply ($\alphafalling\approx5.58$), with no
         detected candidates beyond some maximum energy. However that maximum
         value lies with $\sim\SI{5e20}{\electronvolt}$ significantly further
         right than expected.
 
         The curve of \emph{Photo-Pair-Prod.~(CMB)} shows a weaker but
         noticeable decrease of flux without cutoff (with
-        $\alphafalling\approx-2.22$). While this behaviour is
+        $\alphafalling\approx2.22$). While this behaviour is
         qualitatively expected, the starting point of this effect lies with
         $\sim\SI{2e19}{\electronvolt}$ also about one order of magnitude too
         far right.
 
     \item[Fe close]
         The cutoff due to \emph{Photo-Pion-Prod.~(CMB)} is also present (with
-        $\alphafalling\approx-2.96$) and
+        $\alphafalling\approx2.96$) and
         lies about two orders of magnitude further right compared to hydrogen,
         which is a reasonable result, considering the higher number of
         nucleons on which the total energy is distributed. In addition to
@@ -181,7 +180,7 @@ When looking at the respective plots, there are a few features to recognize:
         \emph{Photo-Disint.~(CMB)}, which exhibits a rather steep spectrum
         at $\sim\SI{5e21}{\electronvolt}$ resulting in a noticeable decrease
         of flux at energies above that value (with
-        $\alphafalling\approx-2.89$). Additionally a very prominent peak is
+        $\alphafalling\approx2.89$). Additionally a very prominent peak is
         apparent for lower energies. This flattening of the spectrum
         is probably caused by secondaries and products of nuclear
         decay with left-shifted energies.
@@ -189,31 +188,31 @@ When looking at the respective plots, there are a few features to recognize:
     \item[Fe far]
         The aforementioned weak second peak in the curve of
         \emph{Photo-Pion-Prod.~(CMB)} is now present more distinctly
-        ($\alphafalling\approx-2.69$), while the first peak disappeared and the
+        ($\alphafalling\approx2.69$), while the first peak disappeared and the
         cutoff remains only in form of non-existent detections beyond some
         maximum energy, with the steep decline having completely disappeared.
 
         \emph{Photo-Pion-Prod.~(IRB)} also shows a peak at a similar
         location as with the CMB, followed by a slightly steeper spectrum,
-        compared to the initial Fermi spectrum ($\alphafalling\approx-2.12$).
+        compared to the initial Fermi spectrum ($\alphafalling\approx2.12$).
         No cutoff is apparent.
 
         \emph{Photo-Disint.~(CMB)} now exhibits steep descent
-        ($\alphafalling\approx-3.40$) with a clear cutoff at
+        ($\alphafalling\approx3.40$) with a clear cutoff at
         $\sim\SI{2e21}{\electronvolt}$, meaning all \Fe-nuclei with larger
         energy have disintegrated or decayed into secondaries, causing the
         strong left-shifted peak in the spectrum.
 
-        While \emph{Photo-Disint.~(IRB)} also shows a strong left-shifted
+        While \emph{Photo-Disint.~(IRB)} too shows a strong left-shifted
         peak reflecting the production of secondaries, no cutoff is present
         and the spectrum seems to return the initial spectral index after a
-        steeper decline with $\alphafalling\approx-2.45$.
+        steeper decline with $\alphafalling\approx2.45$.
 
-        When given sufficient propagation time (with longer distances),
+        When given sufficient propagation time (\ie~longer distances),
         energy decay due to \emph{Photo-Pair-Prod.~(CMB)} becomes also
         noticeable for nuclei with energies greater than
         $\SI{1e21}{\electronvolt}$, apparent from a decline of the spectrum
-        with $\alphafalling\approx-3.63$. Since this process does not change
+        with $\alphafalling\approx3.63$. Since this process does not change
         the internal structure of the nuclei, no unstable products are produced
         and thus no decay happens. This is reflected by a missing peak of
         left-shifted flux in the spectrum.
@@ -402,12 +401,13 @@ scale length $d_{\mathrm{scale}}=\SI{100}{\mega\parsec}$ was chosen (see
 
 
 \subsection{Magnetic Deflection}
+\label{sec:eval-defl}
 The deflections experienced by the trajectories of CRs due to turbulent
 magnetic fields are investigated by discussing the
 \begin{enumerate}[label=\textbf{(\roman*)}]
     \item the differential candidate number per rigidity $\dd{N}/\dd{\rho}$
         times $\rho^2$, with $\rho=\Lamor/l_c$, $\Lamor=E/ZeBc$ and its
-        deviation from the initial power-law spectrum with $\alpha=-2$
+        deviation from the initial power-law spectrum with $\alpha=2$
         (the spectrum is obtained as described in \cref{sec:eval-rew}; see
         \cref{fig:deflection-spectra}),
     \item the distributions of trajectory lengths (see
@@ -456,7 +456,7 @@ But at first, regarding some important numbers:
         Resonant scattering shows itself as peaks in those spectra,
         \ie~the flux at resonant rigidities is amplified (candidates below the
         peak gain, while those above lose energy), which results in a deviation
-        from $\alpha=-2$.
+        from $\alpha=2$.
 
         With increasing radii the resonant regime is shifted to higher
         rigidities.
@@ -561,7 +561,7 @@ When comparing these observations, there are a few things to note:
         spectrum remains undisturbed for $\rho>\num{5e1}$
         (\ie~$E>\SI{2.2e19}{\eV}$). This un-scattered flux causes the peaks of
         the initial bins in the other two distributions. These parameters
-        could provide and approach to explain the observed anisotropy in the
+        could provide an approach to explain the observed anisotropy in the
         arrival directions at those high energies.
 
 \end{itemize}
@@ -578,45 +578,45 @@ When comparing these observations, there are a few things to note:
         \\
         \midrule
         {\multirow{4}{*}{\num{24e-3}}}
-        & 1     & -2.00 & 0.03(26)      & 0.49(161)     \\
-        & 10    & -2.04 & 0.17(619)     & 08.16(1845)   \\
-        & 20    & -3.07 & 0.23(420)     & 20.46(3242)   \\
-        & 50    & -3.08 & 00.88(3366)   & 48.93(4602)   \\
+        & 1     & 2.00 & 0.03(26)      & 0.49(161)     \\
+        & 10    & 2.04 & 0.17(619)     & 08.16(1845)   \\
+        & 20    & 3.07 & 0.23(420)     & 20.46(3242)   \\
+        & 50    & 3.08 & 00.88(3366)   & 48.93(4602)   \\
         \cmidrule{1-5}
 %
         {\multirow{4}{*}{\num{.24}}}
-        & 1     & -2.22 & 01.70(5405)   & 10.24(2037)   \\
-        & 10    & -2.31 & 019.75(16619) & 49.20(4726)   \\
-        & 20    & -2.29 & 026.88(21741) & 59.24(4756)   \\
-        & 50    & -2.35 & 040.78(21228) & 73.38(4535)   \\
+        & 1     & 2.22 & 01.70(5405)   & 10.24(2037)   \\
+        & 10    & 2.31 & 019.75(16619) & 49.20(4726)   \\
+        & 20    & 2.29 & 026.88(21741) & 59.24(4756)   \\
+        & 50    & 2.35 & 040.78(21228) & 73.38(4535)   \\
         \cmidrule{1-5}
 %
         {\multirow{4}{*}{\num{.48}}}
-        & 1     & -2.47 & 006.89(10490) & 20.44(3270)   \\
-        & 10    & -2.38 & 055.17(29546) & 63.12(4727)   \\
-        & 20    & -2.39 & 071.12(31868) & 72.39(4562)   \\
-        & 50    & -2.40 & 128.14(46309) & 82.15(4249)   \\
+        & 1     & 2.47 & 006.89(10490) & 20.44(3270)   \\
+        & 10    & 2.38 & 055.17(29546) & 63.12(4727)   \\
+        & 20    & 2.39 & 071.12(31868) & 72.39(4562)   \\
+        & 50    & 2.40 & 128.14(46309) & 82.15(4249)   \\
         \cmidrule{1-5}
 %
         {\multirow{4}{*}{\num{2.4}}}
-        & 1     & -3.03 & 106.87(41466) & 50.54(4807)   \\
-        & 10    & -2.99 & 362.74(71616) & 83.49(4188)   \\
-        & 20    & -3.00 & 419.58(77142) & 86.59(4094)   \\
-        & 50    & -2.97 & 526.08(86515) & 88.17(3956)   \\
+        & 1     & 3.03 & 106.87(41466) & 50.54(4807)   \\
+        & 10    & 2.99 & 362.74(71616) & 83.49(4188)   \\
+        & 20    & 3.00 & 419.58(77142) & 86.59(4094)   \\
+        & 50    & 2.97 & 526.08(86515) & 88.17(3956)   \\
         \cmidrule{1-5}
 %
         {\multirow{4}{*}{\num{24}}}
-        & 1     & -3.30 & 1361.81(125738) & 80.35(4461) \\
-        & 10    & -3.35 & 2378.69(130089) & 88.25(3975) \\
-        & 20    & -3.35 & 2527.83(127112) & 89.70(3929) \\
-        & 50    & -3.29 & 2669.64(127207) & 89.65(3924) \\
+        & 1     & 3.30 & 1361.81(125738) & 80.35(4461) \\
+        & 10    & 3.35 & 2378.69(130089) & 88.25(3975) \\
+        & 20    & 3.35 & 2527.83(127112) & 89.70(3929) \\
+        & 50    & 3.29 & 2669.64(127207) & 89.65(3924) \\
         \cmidrule{1-5}
 %
         {\multirow{4}{*}{\num{48}}}
-        & 1     & -3.23 & 2006.20(145893) & 80.25(4411) \\
-        & 10    & -3.18 & 2646.78(141007) & 86.68(3996) \\
-        & 20    & -3.22 & 2709.92(140225) & 88.53(3928) \\
-        & 50    & -3.37 & 2726.14(135104) & 89.52(3906) \\
+        & 1     & 3.23 & 2006.20(145893) & 80.25(4411) \\
+        & 10    & 3.18 & 2646.78(141007) & 86.68(3996) \\
+        & 20    & 3.22 & 2709.92(140225) & 88.53(3928) \\
+        & 50    & 3.37 & 2726.14(135104) & 89.52(3906) \\
         \bottomrule
     \end{tabular}
     \caption{%
@@ -660,44 +660,210 @@ When comparing these observations, there are a few things to note:
 
 
 \subsection{Constraints on the Sources}
-\todo{different way to compute $\ablenkung$, due to implementation (only
-leaving candidates are detected), the distribution is centered around 45°}
+\subsubsection*{Prerequisites}
+Modeling the simulation setup naively with one or more sources and a
+small observer sphere representing the earth results in a considerable
+computational effort in order to obtain significant statistics,
+since only very few candidates would actually reach that observer. The setup
+used here is known as \emph{inverted setup:} One point-like source in the
+center of the domain is surrounded by a large observer sphere, which detects
+all propagated candidates (\emph{original setup}). The results are then
+transformed into the results of a proper 3D simulation, with a single source
+outside of a single small observer, such as the earth (\emph{proper setup}).
+The vector between source and point of detection (\emph{detection vector}) in
+the original setup corresponds to the proper line of sight in the proper setup,
+its length (\ie~the radius of the large observer sphere) to the proper source
+distance and its angle with the final momentum vector to the proper deflection
+angle \ablenkung~of the detected candidate (see the sky maps in
+\cref{fig:skymaps} for a visualization).
 
-evaluation procedure:
 
-inverse simulation, result obtained at earth by reweighting (observer size:
-milky way) -> flux $\CRFlux=r^2\dd{N}/\dd{A}^2\dd{t}$
+\input{tikz/sky_map}
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[t]{\textwidth}
+        \centering
+        \caption{$\Robserver=\SI{.24}{\mega\parsec}$}
+        \label{fig:skymap-close}
+        \begin{minipage}{.48\textwidth}
+            \includegraphics[width=\textwidth]{sky_map_brms-1e-12_r-7e+21}
+        \end{minipage}~%
+        \begin{minipage}{.48\textwidth}
+            \SkyMapHist{7e+21}{5e0}{\textwidth}
+        \end{minipage}
+    \end{subfigure}
+%
+    \begin{subfigure}[t]{\textwidth}
+        \centering
+        \caption{$\Robserver=\SI{2.4}{\mega\parsec}$}
+        \label{fig:skymap-medium}
+        \begin{minipage}{.48\textwidth}
+            \includegraphics[width=\textwidth]{sky_map_brms-1e-12_r-7e+22}
+        \end{minipage}~%
+        \begin{minipage}{.48\textwidth}
+            \SkyMapHist{7e+22}{4e1}{\textwidth}
+        \end{minipage}
+    \end{subfigure}
+%
+    \begin{subfigure}[t]{\textwidth}
+        \centering
+        \caption{$\Robserver=\SI{24}{\mega\parsec}$}
+        \label{fig:skymap-far}
+        \begin{minipage}{.48\textwidth}
+            \includegraphics[width=\textwidth]{sky_map_brms-1e-12_r-7e+23}
+        \end{minipage}~%
+        \begin{minipage}{.48\textwidth}
+            \SkyMapHist{7e+23}{1e2}{\textwidth}
+        \end{minipage}
+    \end{subfigure}
+    \caption[Sky Maps]{%
+        Sky maps of a proper 3D simulation with one source as seen from the
+        observer: For each candidate the coordinate system was rotated such
+        that the detection vector lies parallel to the x-axis
+        ($\phi_r=0,\theta_r=0$ in spherical coordinates). The polar and
+        azimutal angles $\phi_p$ and $\theta_p$ of the corresponding momentum
+        vector were then plotted in a Hammer-Aitoff projection.
 
-expected behaviour:
-$\CRFlux(\SI{5}{\exa\eV}\le{E}\le\SI{30}{\exa\eV})\propto E^{-2.5}$
-and high isotropy
+        For three observer distances
+        $\Robserver=\SIlist{.24;2.4;24}{\mega\parsec}$ with
+        $\Brms=\SI{10}{\nano\gauss}$ the resulting sky maps and deflection
+        distributions were plotted to illustrate different degrees of
+        anisotropy.
+    }
+    \label{fig:skymaps}
+\end{figure}
 
-plotted spectra $E^{-2.5}\times\CRFlux$ vs.~$E$ and identified possible
-(linear) domains.
-For energies in those domains, alpha was fitted via ODR, with red.~$\chi^2$
-test. This was repeated for a different source distribution (-> reweighting).
 
-The deflections are this time computed from the line of sight and the final
-momentum (different to above) -> due to implementation detail only in [0°,
-90°].
-Deflections were plotted and averaged (independent of source distribution) for
-the above mentioned energy interval.
+The quantity of interest here is the particle flux
+\begin{equation*}
+    \CRFlux=\frac{\dd{N}}{\dd{A}\dd{\Omega}\dd{t}}.
+\end{equation*}
+To obtain the differential particle number $\dd{N}$ the histogram of the
+energies is computed, with additional weights $1/\abs{\cos\ablenkung}$ to account
+for the angular dependence of the effective area $\dd{A}$ and $1/\sin\ablenkung$ to
+account for the solid angle $\dd{\Omega}\propto\sin\ablenkung$.
+Further, the effective area in spherical coordinates is known to be
+$\dd{A}=r^2\dd{\Omega}$, thus the particle flux becomes
+\begin{equation*}
+    \CRFlux=\frac{\Robserver^2\dd{N}}{\left(\dd{A}\right)^2},
+\end{equation*}
+where \Robserver~is the proper source distance and
+$\dd{A}=4\pi{r}^2$ is the surface area of the proper small observer
+sphere, with $r=\SI{25}{\kilo\parsec}$ being chosen as the
+estimated radius of the Milky Way. Finally, $\dd{t}=1$ was set, which does not
+influence the results, as the histogram is normalized anyway.
+This expression can then straightforwardly be computed, and the corresponding
+uncertainties $\Delta{N}$ are found as described in \cref{sec:eval-rew}.
 
-\todo{discuss good candidates and deduce therefrom source constraints}
+\subsubsection*{Evaluation Procedure}
+Now, with this setup constraints on the parameters are to be estimated, such
+that the observational conditions of a spectral index $\alpha=2.5$ and
+sufficiently high isotropy in the range $\inrange{E}{5}{30}{\exa\eV}$ are met.
+Based on the results from \cref{sec:eval-defl} concerning the isotropies at
+different source distances, only radii $\Robserver\ge\SI{2.4}{\mega\parsec}$
+are considered in the following. Further the results of
+$\Brms=\SI{20}{\nano\gauss}$ are dropped, due to being rather similar to the
+other field strengths and thus not providing more insight.
 
-while \Brms=\SI{1}{\nano\gauss} shows somehow irregular but good isotropy even
-for \SI{2.4}{\mega\parsec}, the spectrum is not very satisfying -> longer
-distances or stronger \Brms.
+Then, for each remaining radius and field strength the spectra \CRFlux~times
+$E^{2.5}$ were plotted and by hand the intervals were chosen, in which the
+resulting curves are approximately horizontal (\ie~correspond to the expected
+spectral index). To fit the spectral index, in those intervals an
+\emph{Orthogonal Distance Regression} was performed (using \texttt{scipy}'s
+interface to \texttt{ODRPACK}), where the obtained uncertainties $\Delta{N}$
+were provided as deviations in y-direction and $(\text{width of
+bins})/\sqrt{12}$ as deviations in x-direction (according to the variance of
+the rectangular distribution). Finally, the goodness of those fits is
+quantified by their respective reduced $\chi^2$-test (the closer \redchisq~to
+1, the better the fit):
+\begin{gather*}
+    \chi^2=\sum_{i=1}^{\text{No.~of samples}}
+    \frac{\left(y_i-f(x_i)\right)^2}{\sigma_y^2} \\
+    \redchisq=\frac{\chi^2}{\text{DoF}}
+    \qc\text{DoF}=(\text{No.~of samples})-(\text{No.~of fitted parameters})
+\end{gather*}
 
-CR flux at greater energies does not match the observations (expected: stronger
-decline, here: the opposite)
+One might speculate -- while Fermi's Theory gives rise to a spectral index
+$\alphasource=2$ from looking at one mechanism of acceleration -- that further
+acceleration mechanisms come into play and that the true spectral index
+deviates from the prediction. As an exemplary case, the collected data was also
+reweighted to a source spectral index of $\alphasource=2.6$ and the resulting
+spectra were discussed.
 
-Additional influences\todox{put in discussion}: iron nuclei
+Additionally, for candidates with energies in the given intervals the
+distributions of the deflection angles \ablenkung~were plotted and the
+corresponding mean and standard deviation were computed as a simple measure to
+estimate the isotropy.
 
-what about the GZK-cutoff?
+\emph{Note:} For the observer spheres the object \texttt{ObserverLargeSphere}
+was used, which only detects leaving particles (re-entering particles are
+ignored).
+Thus, the deflection angles -- which were computed as described in this section
+-- fall into the interval $\inrange{\ablenkung}{0}{90}{\degree}$ (instead of
+$\inrange{\ablenkung}{0}{180}{\degree}$, which is the expected behaviour).
+This approach is marked as deprecated and it is instead recommended
+to use \texttt{ObserverSurface(Sphere(center, radius))}, which detects all
+particles regardless of their direction.
 
-list the confusing things
+The resulting spectra are shown in \cref{fig:constraints}, the angular
+distributions in \cref{fig:constrains-defl} and an overview over the chosen
+energy intervals, the obtained spectral indices and the mean values of the
+deflections are listed in \cref{tab:constr}
 
+\subsubsection*{Results}
+\begin{description}
+    \item[General Behaviour]
+        Most of the plotted spectra exhibit two kinks, which delimit an
+        approx.~ horizontal plateau (marking the area of interest with
+        $\alpha\sim2.5$).
+
+        With increasing \Robserver~and fixed \Brms, those kinks are shifted to
+        higher energies, while approx.~maintaining their relative (logarithmic)
+        distance.
+
+        Changing \Brms~while keeping \Robserver~fixed changes the overall shape
+        of the spectra: the positions and relative distance of the kinks and
+        the slopes of the curves below and above the plateau region.
+
+    \item[Candidates for $\mathbf{\alphasource=2}$]
+        The only case with a resulting spectral index whose standard deviation
+        includes the expected value is $\Robserver=\SI{24}{\mega\parsec},
+        \Brms=\SI{1}{\nano\gauss}$ with $\alphafalling=\num{2.55(6)}$. However
+        the interval for which this value was obtained is somewhat too short
+        ($\inrange{E}{2}{10}{\exa\eV}$).
+
+        All other results yield spectral indices, which are too flat.
+
+    \item[Candidates for $\mathbf{\alphasource=2.6}$]
+        Increasing ${\alphasource}$ also increases all
+        ${\alphafalling}$. This shifts all results for
+        $\Robserver=\SI{2.4}{\mega\parsec}$ into the vicinity of the expected
+        value (yet it is not included by any of the respective standard
+        deviations). Out of these, $\Brms=\SI{10}{\nano\gauss}$ with
+        $\alphafalling=\num{2.54(2)}$ is valid for an interval
+        ($\inrange{E}{3}{40}{\exa\eV}$) which entirely includes the imposed
+        constraints.
+
+        The only other case being in line is $\Robserver=\SI{48}{\mega\parsec},
+        \Brms=\SI{10}{\nano\gauss}$ with $\alphafalling=\num{2.48(8)}$,
+        however its energy interval has a noticeably too large lower bound
+        ($\inrange{E}{15}{100}{\exa\eV}$).
+
+    \item[Notes on the Isotropy]
+        The distributions of deflection angles in the respective energy
+        intervals are \emph{for all cases} noticeable high, with rather regular
+        semi-circle shapes (in y-log representation).
+
+        The case $\Robserver=\SI{2.4}{\mega\parsec}, \Brms=\SI{1}{\nano\gauss}$
+        with $\ablenkung=\SI{41.44(1942)}{\degree}$ exhibits the strongest
+        deviation (by $7.9\%$) from the expected mean deflection angle for
+        maximum isotropy $\ablenkung=\SI{45}{\degree}$. This is also reflected
+        by the slight irregularities of the respective deflection angle
+        distribution. However one can argue that the deviation of the mean
+        value and the bumps in the distribution still fall within the
+        acceptable regime.
+
+\end{description}
 
 
 \begin{landscape}
@@ -737,28 +903,28 @@ list the confusing things
         {\multirow{2}{*}{\Brms/\si{\nano\gauss}}} &
         {\multirow{2}{*}{\Emin/\si{\exa\eV}}} &
         {\multirow{2}{*}{\Emax/\si{\exa\eV}}} &
-        \multicolumn{2}{c}{$\alphasource=-2.0$} &
-        \multicolumn{2}{c}{$\alphasource=-2.6$} &
+        \multicolumn{2}{c}{$\alphasource=2.0$} &
+        \multicolumn{2}{c}{$\alphasource=2.6$} &
         {\multirow{2}{*}{\ablenkung/\si{\degree}}} \\
         \cmidrule{5-8}
         & & & & {\alphafalling} & {\redchisq} & {\alphafalling} & {\redchisq} & \\
         \midrule
         {\multirow{3}{*}{\num{2.4}}}
-        & 1     & 1 & 3.5   & -2.02(8)  & .57   & -2.62(9)  & .74   & 41.44(1942)   \\
-        & 10    & 3 & 40    & -1.93(3)  & 1.27  & -2.54(2)  & 1.18  & 43.72(1956)   \\
-        & 50    & 8 & 150   & -1.97(2)  & 2.08  & -2.55(2)  & 1.80  & 44.49(1959)   \\
+        & 1     & 1 & 3.5   & 2.02(8)  & .57   & 2.62(9)  & .74   & 41.44(1942)   \\
+        & 10    & 3 & 40    & 1.93(3)  & 1.27  & 2.54(2)  & 1.18  & 43.72(1956)   \\
+        & 50    & 8 & 150   & 1.97(2)  & 2.08  & 2.55(2)  & 1.80  & 44.49(1959)   \\
         \cmidrule{1-9}
 %
         {\multirow{3}{*}{\num{24}}}
-        & 1     & 2 & 10    & -2.55(6)  & .74   & -3.17(7)  & .88   & 44.01(1957)   \\
-        & 10    & 7 & 100   & -2.37(4)  & 9.87  & -2.92(5)  & 11.28 & 44.54(1966)   \\
-        & 50    & 30& 300   & -1.75(3)  & 1.35  & -2.22(2)  & 1.05  & 44.61(1966)   \\
+        & 1     & 2 & 10    & 2.55(6)  & .74   & 3.17(7)  & .88   & 44.01(1957)   \\
+        & 10    & 7 & 100   & 2.37(4)  & 9.87  & 2.92(5)  & 11.28 & 44.54(1966)   \\
+        & 50    & 30& 300   & 1.75(3)  & 1.35  & 2.22(2)  & 1.05  & 44.61(1966)   \\
         \cmidrule{1-9}
 %
         {\multirow{3}{*}{\num{48}}}
-        & 1     & 2 & 15    & -2.31(3)  & .99   & -2.93(3)  & 1.01  & 44.07(1949)   \\
-        & 10    & 15& 100   & -2.02(7)  & 5.12  & -2.48(8)  & 5.21  & 44.35(1940)   \\
-        & 50    & 20& 300   & -1.30(8)  & 25.00 & -1.68(11) & 52.96 & 44.53(1969)   \\
+        & 1     & 2 & 15    & 2.31(3)  & .99   & 2.93(3)  & 1.01  & 44.07(1949)   \\
+        & 10    & 15& 100   & 2.02(7)  & 5.12  & 2.48(8)  & 5.21  & 44.35(1940)   \\
+        & 50    & 20& 300   & 1.30(8)  & 25.00 & 1.68(11) & 52.96 & 44.53(1969)   \\
         \bottomrule
     \end{tabular}
     \caption{%
@@ -766,7 +932,7 @@ list the confusing things
         including the fitted spectral indices and averaged deflection angles in
         those intervals are listed. The spectral indices were fitted for two
         different source distributions and are accompanied by their respective
-        reduced $\chi^2$ test.
+        reduced $\chi^2$-test.
     }
     \label{tab:constr}
 \end{table}

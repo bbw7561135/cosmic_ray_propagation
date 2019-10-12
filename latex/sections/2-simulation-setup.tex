@@ -38,7 +38,7 @@ This can easily be done with \texttt{numpy}:
     frame=lines,
     framesep=2mm,
     baselinestretch=1.2,
-    bgcolor=black!20!white,
+    bgcolor=black!10!white,
     fontsize=\small,
 ]{python}
     >>> r = np.random.uniform(size=(2, NUMBER_OF_SAMPLES, NUMBER_OF_MC_RUNS))
@@ -57,8 +57,8 @@ unchanged from the initial spectrum; in particular all propagated particles
 are detected bt the observer). Their sources are uniformly distributed
 between redshifts of $z=0$ and $z=2$ and emit particles according to a
 power-law energy spectrum from the interval \SIrange{1e18}{1e21}{\eV}. The
-simulation is performed once with a spectral index $\alpha=-1$ responsible for
-a flat energy distribution and once with a spectral index $\alpha=-2$ as
+simulation is performed once with a spectral index $\alpha=1$ responsible for
+a flat energy distribution and once with a spectral index $\alpha=2$ as
 expected from first-order Fermi acceleration, each time using \num{1000}
 particles.
 
@@ -105,7 +105,7 @@ generated.
 The grid size is $256^3$ with a \SI{75}{\kilo\parsec} grid spacing, resulting
 in an extend of $(256\times\SI{75}{\kilo\parsec})^3$. The turbulence of the
 magnetic field behaves according to a power spectrum with spectral index
-$-11/3$ (instead of $-5/3$ as mentioned in \cref{sec:intro-turbulence},
+$11/3$ (instead of $5/3$ as mentioned in \cref{sec:intro-turbulence},
 according to the manual) with a minimum and maximum length scale of
 \SI{150}{\kilo\parsec} and \SI{2000}{\kilo\parsec} respectively.
 There are four simulations performed with varying root mean square field

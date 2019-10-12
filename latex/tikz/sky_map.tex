@@ -1,0 +1,37 @@
+% \def\width{8.5cm}
+% \def\width{7.65cm}
+% \def\height{5.75cm}
+
+\newcommand{\SkyMapHist}[3]{%
+
+\def\width{#3}
+\def\height{.75\width}
+
+\tikzexternalenable
+\tikzsetnextfilename{ext-skymap-#1}
+
+\begin{tikzpicture}
+\begin{axis}[%
+    width=\width, height=\height,
+    xlabel={$\ablenkung/\si{\degree}$},
+    ylabel={relative abundance},
+    ymode=log,
+    grid=major,
+    % cycle list={[of colormap=Dark2]},
+    ymin=#2,
+]
+    \addplot [%
+        const plot mark mid,
+        thick,
+        no markers,
+        draw=Dark2-A,
+    ] table [x=bins, y=N] {%
+        plotdata/sky_map_hist_brms-1e-12_r-#1.csv
+    };
+\end{axis}
+\end{tikzpicture}
+
+\tikzexternaldisable
+}
+
+% vim: set ff=unix tw=79 sw=4 ts=4 et ic ai :
