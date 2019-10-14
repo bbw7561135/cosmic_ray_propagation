@@ -568,7 +568,11 @@ When comparing these observations, there are a few things to note:
 
 \begin{table}[ht!]
     \centering
-    \begin{tabular}{SSSSS}
+    \begin{tabular}{%
+        SSS
+        S[table-format=4.2,table-figures-uncertainty=1,table-number-alignment=center]
+        S[table-format=6.2,table-figures-uncertainty=1,table-number-alignment=center]
+    }
         \toprule
         {\multirow{2}{*}{\Robserver/\si{\mega\parsec}}} &
         {\multirow{2}{*}{\Brms/\si{\nano\gauss}}} &
@@ -722,7 +726,8 @@ angle \ablenkung~of the detected candidate (see the sky maps in
         that the detection vector lies parallel to the x-axis
         ($\phi_r=0,\theta_r=0$ in spherical coordinates). The polar and
         azimutal angles $\phi_p$ and $\theta_p$ of the corresponding momentum
-        vector were then plotted in a Hammer-Aitoff projection.
+        vectors were then accumulated in a histogram and plotted in a
+        Hammer-Aitoff projection.
 
         For three observer distances
         $\Robserver=\SIlist{.24;2.4;24}{\mega\parsec}$ with
@@ -897,7 +902,14 @@ deflections are listed in \cref{tab:constr}
 
 \begin{table}[p]
     \centering
-    \begin{tabular}{*{9}{S}}
+    \begin{tabular}{%
+            *{4}{S}
+            S[table-format=1.2,table-figures-uncertainty=1]
+            S
+            S[table-format=3.2,table-figures-uncertainty=1]
+            S
+            S[table-format=3.2,table-figures-uncertainty=1]
+        }
         \toprule
         {\multirow{2}{*}{\Robserver/\si{\mega\parsec}}} &
         {\multirow{2}{*}{\Brms/\si{\nano\gauss}}} &
